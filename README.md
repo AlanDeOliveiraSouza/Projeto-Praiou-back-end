@@ -28,9 +28,9 @@ enviar Comentários nas postagens citadas; e possuir uma rede de Amizades. Um us
 
 
 ## Integrantes
-Alan de Oliveira Souza
-Fellipe de Deus Bairos Cerqueira
-Emanuel de Brito
+Alan de Oliveira Souza <br>
+Fellipe de Deus Bairos Cerqueira <br
+Emanuel de Brito <br>
 Cauê Mayo Simões
 
 *Projeto desenvolvido para a disciplina de Laboratório de Engenharia de Software*
