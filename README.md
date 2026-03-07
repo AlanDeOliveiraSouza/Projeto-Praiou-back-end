@@ -29,7 +29,7 @@ enviar Comentários nas postagens citadas; e possuir uma rede de Amizades. Um us
 
 ## Integrantes
 Alan de Oliveira Souza <br>
-Fellipe de Deus Bairos Cerqueira <br
+Fellipe de Deus Bairos Cerqueira <br>
 Emanuel de Brito <br>
 Cauê Mayo Simões
 
