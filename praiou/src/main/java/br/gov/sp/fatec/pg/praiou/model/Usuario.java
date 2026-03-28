@@ -2,35 +2,37 @@ package br.gov.sp.fatec.pg.praiou.model;
 
 import java.util.Date;
 
-import br.gov.sp.fatec.pg.praiou.enums.TipoUsuario;
+public abstract class Usuario {
 
-public class Usuario {
-    // Atributos da classe USUARIO
+    // Atributos padrão para todos os USUARIOs
     private Integer id;
     private String nome;
-    private String sobrenome;
     private Date dataNascimento;
     private String email;
     private String senha;
     private String token;
-    private String telefone;
-    private TipoUsuario tipoUsuario;
+    private boolean statusAdministrador;
 
     // Construtores de USUARIO:
-    
     // Construtor vazio para ser usado na coleta dos dados do banco
     public Usuario() {}
 
-    public Usuario(Integer id, String nome, String sobrenome, Date dataNascimento, String email, String senha, String token, String telefone, TipoUsuario tipoUsuario) {
+    // Construtor básico para cadastro
+    public Usuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
+    // Construtor com todos os atributos nos parâmetros
+    public Usuario(Integer id, String nome, Date dataNascimento, String email, String senha, String token, boolean statusAdministrador) {
         this.id = id;
         this.nome = nome;
-        this.sobrenome = sobrenome;
         this.dataNascimento = dataNascimento;
         this.email = email;
         this.senha = senha;
         this.token = token;
-        this.telefone = telefone;
-        this.tipoUsuario = tipoUsuario;
+        this.statusAdministrador = statusAdministrador;
     }
 
     // Getters e Setters:
@@ -49,14 +51,6 @@ public class Usuario {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getSobrenome() {
-        return sobrenome;
-    }
-
-    public void setSobrenome(String sobrenome) {
-        this.sobrenome = sobrenome;
     }
 
     public Date getDataNascimento() {
@@ -91,19 +85,11 @@ public class Usuario {
         this.token = token;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public boolean getStatusAdministrador() {
+        return statusAdministrador;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public TipoUsuario getTipoUsuario() {
-        return tipoUsuario;
-    }
-
-    public void setTipoUsuario(TipoUsuario tipoUsuario) {
-        this.tipoUsuario = tipoUsuario;
+    public void setStatusAdministrador(boolean statusAdministrador) {
+        this.statusAdministrador = statusAdministrador;
     }
 }
