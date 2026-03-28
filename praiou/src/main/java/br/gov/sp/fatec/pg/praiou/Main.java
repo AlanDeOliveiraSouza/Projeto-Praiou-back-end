@@ -1,6 +1,7 @@
 package br.gov.sp.fatec.pg.praiou;
 
 import br.gov.sp.fatec.pg.praiou.database.MySQLConnection;
+import br.gov.sp.fatec.pg.praiou.model.Atleta;
 import br.gov.sp.fatec.pg.praiou.model.Usuario;
 import br.gov.sp.fatec.pg.praiou.repository.UsuarioRepository;
 import io.javalin.Javalin;
@@ -13,11 +14,9 @@ public class Main {
         MySQLConnection.criarTabelas();
 
         // Instância de usuário para teste
-        Usuario usuario = new Usuario();
+        Usuario usuario = new Atleta("Alan Souza", "alansouza@gmail.com", "123456");
 
-        // Inserindo dados para teste
-        usuario.setEmail("alansouza@gmail.com");
-        usuario.setSenha("123456");
+        System.out.println(usuario.getStatusAdministrador());
 
         // Autenticação do usuário
         UsuarioRepository.autenticar(usuario.getEmail(), usuario.getSenha());

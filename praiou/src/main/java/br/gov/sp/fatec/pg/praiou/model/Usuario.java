@@ -17,11 +17,12 @@ public abstract class Usuario {
     // Construtor vazio para ser usado na coleta dos dados do banco
     public Usuario() {}
 
-    // Construtor básico para cadastro
+    // Construtor básico para cadastro de ATLETA
     public Usuario(String nome, String email, String senha) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.statusAdministrador = false;
     }
 
     // Construtor com todos os atributos nos parâmetros

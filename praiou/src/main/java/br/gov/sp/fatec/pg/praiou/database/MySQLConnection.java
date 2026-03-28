@@ -73,7 +73,7 @@ public class MySQLConnection {
 
         // Inserindo dados na tabela USUARIO para testes
         String insercaoUsuario = 
-        "INSERT INTO usuario (nm_usuario, nm_email_usuario, cd_senha) VALUES " +
+        "INSERT IGNORE usuario (nm_usuario, nm_email_usuario, cd_senha) VALUES " +
         "('Alan de Oliveira', 'alansouza@gmail.com', '123456'), " + 
         "('Emanuel de Brito', 'emanuelbrito@gmail.com', '123456'), " + 
         "('Cauê Simões', 'cauesimoes@gmail.com', '123456'), " + 
