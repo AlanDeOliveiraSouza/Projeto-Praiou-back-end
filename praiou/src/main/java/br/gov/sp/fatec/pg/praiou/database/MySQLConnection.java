@@ -27,18 +27,19 @@ public class MySQLConnection {
             System.out.println("Erro ao criar/verificar banco de dados: " + e.getMessage());
         } 
 
+        criarTabelas();
+
     }
 
     public static void criarTabelas() {
         // Cria/verifica tabelas e dados do banco de dados
 
-        // USO DO BANCO DE DADOS:
+        // CRIAÇÃO DE TABELAS
 
-        // Criação de tabelas
         // Script de criação da tabela USUARIO
         String tabelaUsuario = 
         "CREATE TABLE IF NOT EXISTS usuario (" + 
-            "id_usuario INT(11) NOT NULL AUTO_INCREMENT, " + 
+            "id_usuario INT NOT NULL AUTO_INCREMENT, " + 
             "nm_usuario VARCHAR(100) NOT NULL, " +  
             "nm_email_usuario VARCHAR(50) NOT NULL UNIQUE, " + 
             "cd_senha VARCHAR(50) NOT NULL, " + 
@@ -51,27 +52,91 @@ public class MySQLConnection {
         ");";
 
         // Script de criação da tabela AMIZADE
-        // String tabelaAmizade = "";
+        String tabelaAmizade = 
+        "CREATE TABLE IF NOT EXISTS amizade (" + 
+            "id_usuario INT NOT NULL, " + 
+            "id_usuario_recebedor_amizade INT NOT NULL, " + 
+            "ic_status_pendente_aceito ENUM('PENDENTE', 'ACEITO') NOT NULL, " + 
+            "PRIMARY KEY (id_usuario, id_usuario_recebedor_amizade), " + 
+            "CONSTRAINT fk_amizade_usuario1 FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario), " + 
+            "CONSTRAINT fk_amizade_usuario2 FOREIGN KEY (id_usuario_recebedor_amizade) REFERENCES usuario (id_usuario)" +
+        ");";
+        
+        // Script de criação da tabela AVALIACAO
+        String tabelaAvaliacao = 
+        "CREATE TABLE IF NOT EXISTS avaliacao (" + 
+            "id_avaliacao INT AUTO_INCREMENT PRIMARY KEY, " + 
+            "id_usuario INT NOT NULL, " + 
+            "id_usuario_avaliado INT NOT NULL, " + 
+            "ic_like_dislike_avaliacao TINYINT(1) NOT NULL, " + 
+            "CONSTRAINT fk_avaliacao_usuario1 FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario), " + 
+            "CONSTRAINT fk_avaliacao_usuario2 FOREIGN KEY (id_usuario_avaliado) REFERENCES usuario (id_usuario)" +
+        ");";
 
         // Script de criação da tabela EVENTO
-        // String tabelaEvento = "";
+        String tabelaEvento = 
+        "CREATE TABLE IF NOT EXISTS evento (" + 
+            "id_evento INT AUTO_INCREMENT PRIMARY KEY, " + 
+            "id_usuario INT NOT NULL, " + 
+            "nm_evento VARCHAR(100) NOT NULL, " + 
+            "nm_tipo_evento ENUM('FUTEBOL', 'VOLEI', 'SURF', 'TENIS', 'CORRIDA', 'OUTRO') NOT NULL," + 
+            "ds_evento VARCHAR(250), " + 
+            "dt_evento DATE, " + 
+            "hr_evento TIME, " + 
+            "nm_endereco_evento VARCHAR(150), " + 
+            "qt_limite_participantes INTEGER, " + 
+            "dt_publicacao_evento DATE DEFAULT NOW(), " + 
+            "CONSTRAINT fk_evento_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario)" + 
+        ");";
 
         // Script de criação da tabela POSTAGEM
-        // String tabelaPostagem = "";
+        String tabelaPostagem = 
+        "CREATE TABLE IF NOT EXISTS postagem (" + 
+            "id_postagem INT AUTO_INCREMENT PRIMARY KEY, " + 
+            "id_usuario INT NOT NULL, " + 
+            "im_postagem LONGBLOB, " + 
+            "ds_postagem VARCHAR(250), " + 
+            "dt_postagem DATETIME DEFAULT NOW(), " + 
+            "CONSTRAINT fk_postagem_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario) " + 
+        ");";
 
         // Script de criação da tabela MENSAGEM
-        // String tabelaMensagem = "";
-
-        // Script de criação da tabela AVALIACAO
-        // String tabelaAvaliacao = "";
+        String tabelaMensagem = 
+        "CREATE TABLE IF NOT EXISTS mensagem (" + 
+            "id_mensagem INT AUTO_INCREMENT PRIMARY KEY, " + 
+            "id_usuario INT NOT NULL, " + 
+            "id_evento INT NOT NULL, " + 
+            "ds_mensagem VARCHAR(250) NOT NULL, " + 
+            "dt_mensagem TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " + 
+            "dt_edicao_mensagem TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " + 
+            "CONSTRAINT fk_mensagem_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario), " + 
+            "CONSTRAINT fk_mensagem_evento FOREIGN KEY (id_evento) REFERENCES evento (id_evento)" + 
+        ");";
 
         // Script de criação da tabela USUARIO_EVENTO
-        // String tabelaUsuarioEvento = "";
+        String tabelaUsuarioEvento = 
+        "CREATE TABLE IF NOT EXISTS usuario_evento (" + 
+            "id_usuario INT NOT NULL, " + 
+            "id_evento INT NOT NULL, " + 
+            "PRIMARY KEY (id_usuario, id_evento), " + 
+            "CONSTRAINT fk_usuario_evento_1 FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario), " + 
+            "CONSTRAINT fk_usuario_evento_2 FOREIGN KEY (id_evento) REFERENCES evento (id_evento)" + 
+        ");";
 
         // Script de criação da tabela USUARIO_POSTAGEM
-        // String tabelaUsuarioPostagem = "";
+        String tabelaAvaliacaoPostagem = 
+        "CREATE TABLE IF NOT EXISTS avaliacao_postagem (" + 
+            "id_usuario INT NOT NULL, " + 
+            "id_postagem INT NOT NULL, " + 
+            "ic_like_dislike_postagem TINYINT(1), " + 
+            "PRIMARY KEY (id_usuario, id_postagem), " +
+            "CONSTRAINT fk_avaliacao_postagem_1 FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario), " + 
+            "CONSTRAINT fk_avaliacao_postagem_2 FOREIGN KEY (id_postagem) REFERENCES postagem (id_postagem)" + 
+        ");";
 
-        // Inserindo dados na tabela USUARIO para testes
+        // INSERÇÃO DE DADOS
+
+        // Inserindo dados na tabela USUARIO
         String insercaoUsuario = 
         "INSERT IGNORE usuario (nm_usuario, nm_email_usuario, cd_senha) VALUES " +
         "('Alan de Oliveira', 'alansouza@gmail.com', '123456'), " + 
@@ -83,13 +148,13 @@ public class MySQLConnection {
             // Executa os scripts no banco de dados
 
             stmt.execute(tabelaUsuario);
-            // stmt.execute(tabelaAmizade);
-            // stmt.execute(tabelaEvento);
-            // stmt.execute(tabelaPostagem);
-            // stmt.execute(tabelaMensagem);
-            // stmt.execute(tabelaAvaliacao);
-            // stmt.execute(tabelaUsuarioEvento);
-            // stmt.execute(tabelaUsuarioPostagem);
+            stmt.execute(tabelaAmizade);
+            stmt.execute(tabelaAvaliacao);
+            stmt.execute(tabelaEvento);
+            stmt.execute(tabelaPostagem);
+            stmt.execute(tabelaMensagem);
+            stmt.execute(tabelaUsuarioEvento);
+            stmt.execute(tabelaAvaliacaoPostagem);
 
             stmt.execute(insercaoUsuario);
 
