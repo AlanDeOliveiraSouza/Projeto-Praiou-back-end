@@ -1,6 +1,7 @@
 package br.gov.sp.fatec.pg.praiou.model;
 
 import java.util.Date;
+import java.time.LocalDate;
 
 public class Mensagem {
 
@@ -8,7 +9,8 @@ public class Mensagem {
     private Usuario remetente;
     private Evento evento; 
     private String conteudo; 
-    private Date dataEnvio;
+    private LocalDate dataEnvio;
+    private LocalDate dataEdicao;    
 
     // Construtor vazio
     public Mensagem() {}
@@ -18,16 +20,17 @@ public class Mensagem {
         this.remetente = remetente;
         this.evento = evento;
         this.conteudo = conteudo;
-        this.dataEnvio = new Date();
+        this.dataEnvio = LocalDate.now();
     }
 
     // Construtor completo
-    public Mensagem(Integer id, Usuario remetente, Evento evento, String conteudo, Date dataEnvio) {
+    public Mensagem(Integer id, Usuario remetente, Evento evento, String conteudo, LocalDate dataEnvio, LocalDate dataEdicao) {
         this.id = id;
         this.remetente = remetente;
         this.evento = evento;
         this.conteudo = conteudo;
         this.dataEnvio = dataEnvio;
+        this.dataEdicao = dataEdicao;
     }
 
     // Getters e Setters
@@ -63,11 +66,19 @@ public class Mensagem {
         this.conteudo = conteudo;
     }
 
-    public Date getDataEnvio() {
+    public LocalDate getDataEnvio() {
         return dataEnvio;
     }
 
-    public void setDataEnvio(Date dataEnvio) {
+    public void setDataEnvio(LocalDate dataEnvio) {
         this.dataEnvio = dataEnvio;
+    }
+
+    public LocalDate getDataEdicao() {
+        return dataEdicao;
+    }
+
+    public void setDataEdicao(LocalDate dataEdicao) {
+        this.dataEdicao = dataEdicao;
     }
 }

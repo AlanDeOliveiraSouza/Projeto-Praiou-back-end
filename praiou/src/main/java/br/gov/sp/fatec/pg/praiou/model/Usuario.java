@@ -1,13 +1,13 @@
 package br.gov.sp.fatec.pg.praiou.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public abstract class Usuario {
 
     // Atributos padrão para todos os USUARIOs
     private Integer id;
     private String nome;
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
     private String email;
     private String senha;
     private String token;
@@ -26,7 +26,7 @@ public abstract class Usuario {
     }
 
     // Construtor com todos os atributos nos parâmetros
-    public Usuario(Integer id, String nome, Date dataNascimento, String email, String senha, String token, boolean statusAdministrador) {
+    public Usuario(Integer id, String nome, LocalDate dataNascimento, String email, String senha, String token, boolean statusAdministrador) {
         this.id = id;
         this.nome = nome;
         this.dataNascimento = dataNascimento;
@@ -54,11 +54,11 @@ public abstract class Usuario {
         this.nome = nome;
     }
 
-    public Date getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 

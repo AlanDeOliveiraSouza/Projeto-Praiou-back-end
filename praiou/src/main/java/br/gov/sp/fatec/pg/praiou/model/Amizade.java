@@ -1,13 +1,13 @@
 package br.gov.sp.fatec.pg.praiou.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Amizade {
 
     private Integer id;
     private Usuario usuarioSolicitante;
     private Usuario usuarioAmigo;
-    private Date dataAmizade;
+    private LocalDate dataAmizade;
     private String status; 
 
     // Construtor vazio
@@ -18,11 +18,11 @@ public class Amizade {
         this.usuarioSolicitante = usuarioSolicitante;
         this.usuarioAmigo = usuarioAmigo;
         this.status = status;
-        this.dataAmizade = new Date(); 
+        this.dataAmizade = LocalDate.now(); 
     }
 
     // Construtor completo
-    public Amizade(Integer id, Usuario usuarioSolicitante, Usuario usuarioAmigo, Date dataAmizade, String status) {
+    public Amizade(Integer id, Usuario usuarioSolicitante, Usuario usuarioAmigo, LocalDate dataAmizade, String status) {
         this.id = id;
         this.usuarioSolicitante = usuarioSolicitante;
         this.usuarioAmigo = usuarioAmigo;
@@ -55,11 +55,11 @@ public class Amizade {
         this.usuarioAmigo = usuarioAmigo;
     }
 
-    public Date getDataAmizade() {
+    public LocalDate getDataAmizade() {
         return dataAmizade;
     }
 
-    public void setDataAmizade(Date dataAmizade) {
+    public void setDataAmizade(LocalDate dataAmizade) {
         this.dataAmizade = dataAmizade;
     }
 

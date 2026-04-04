@@ -1,6 +1,6 @@
 package br.gov.sp.fatec.pg.praiou.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Atleta extends Usuario {
 
@@ -18,7 +18,7 @@ public class Atleta extends Usuario {
     }
 
     // Construtor com todos os atributos
-    public Atleta(Integer id, String nome, Date dataNascimento, String email, String senha, String token, boolean statusAdministrador, String bio, String fotoPerfil, Integer pontuacao) {
+    public Atleta(Integer id, String nome, LocalDate dataNascimento, String email, String senha, String token, boolean statusAdministrador, String bio, String fotoPerfil, Integer pontuacao) {
         super(id, nome, dataNascimento, email, senha, token, statusAdministrador);
         this.bio = bio;
         this.fotoPerfil = fotoPerfil;

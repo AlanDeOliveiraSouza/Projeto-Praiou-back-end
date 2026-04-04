@@ -1,14 +1,14 @@
 package br.gov.sp.fatec.pg.praiou.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-public class Avaliacao {
+public class Avaliacao { 
 
     private Integer id;
     private Usuario avaliador; 
     private Evento evento;     // O EVENTO que está sendo avaliado
     private boolean curtida;   
-    private Date dataAvaliacao;
+    private LocalDate dataAvaliacao; 
 
     // Construtor Vazio
     public Avaliacao() {}
@@ -18,11 +18,11 @@ public class Avaliacao {
         this.avaliador = avaliador;
         this.evento = evento;
         this.curtida = curtida;
-        this.dataAvaliacao = new Date();
+        this.dataAvaliacao = LocalDate.now();
     }
 
     // Construtor Completo 
-    public Avaliacao(Integer id, Usuario avaliador, Evento evento, boolean curtida, Date dataAvaliacao) {
+    public Avaliacao(Integer id, Usuario avaliador, Evento evento, boolean curtida, LocalDate dataAvaliacao) {
         this.id = id;
         this.avaliador = avaliador;
         this.evento = evento;
@@ -43,6 +43,6 @@ public class Avaliacao {
     public boolean isCurtida() { return curtida; }
     public void setCurtida(boolean curtida) { this.curtida = curtida; }
 
-    public Date getDataAvaliacao() { return dataAvaliacao; }
-    public void setDataAvaliacao(Date dataAvaliacao) { this.dataAvaliacao = dataAvaliacao; }
+    public LocalDate getDataAvaliacao() { return dataAvaliacao; }
+    public void setDataAvaliacao(LocalDate dataAvaliacao) { this.dataAvaliacao = dataAvaliacao; }
 }
