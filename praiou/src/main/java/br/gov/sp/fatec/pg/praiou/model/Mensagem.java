@@ -1,6 +1,5 @@
 package br.gov.sp.fatec.pg.praiou.model;
 
-import java.util.Date;
 import java.time.LocalDate;
 
 public class Mensagem {
