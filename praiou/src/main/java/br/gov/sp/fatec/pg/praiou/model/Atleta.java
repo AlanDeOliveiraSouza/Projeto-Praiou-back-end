@@ -17,6 +17,11 @@ public class Atleta extends Usuario {
         super(nome, email, senha);
     }
 
+    // Construtor com parâmetros básicos para login de ATLETA
+    public Atleta(String email, String senha) {
+        super(email, senha, false);
+    }
+
     // Construtor com todos os atributos
     public Atleta(Integer id, String nome, LocalDate dataNascimento, String email, String senha, String token, boolean statusAdministrador, String bio, String fotoPerfil, Integer pontuacao) {
         super(id, nome, dataNascimento, email, senha, token, statusAdministrador);

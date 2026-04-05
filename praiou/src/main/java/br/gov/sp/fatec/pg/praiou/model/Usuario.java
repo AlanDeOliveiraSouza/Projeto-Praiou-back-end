@@ -2,7 +2,7 @@ package br.gov.sp.fatec.pg.praiou.model;
 
 import java.time.LocalDate;
 
-public abstract class Usuario {
+public class Usuario {
 
     // Atributos padrão para todos os USUARIOs
     private Integer id;
@@ -16,6 +16,13 @@ public abstract class Usuario {
     // Construtores de USUARIO:
     // Construtor vazio para ser usado na coleta dos dados do banco
     public Usuario() {}
+
+    // Construtor básico para login
+    public Usuario(String email, String senha, boolean statusAdministrador) {
+        this.email = email;
+        this.senha = senha;
+        this.statusAdministrador = statusAdministrador;
+    }
 
     // Construtor básico para cadastro de ATLETA
     public Usuario(String nome, String email, String senha) {
