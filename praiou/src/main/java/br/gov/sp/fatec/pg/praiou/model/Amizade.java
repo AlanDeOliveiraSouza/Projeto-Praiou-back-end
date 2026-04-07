@@ -9,7 +9,7 @@ public class Amizade {
     private Usuario usuarioAmigo;
     private LocalDate dataAmizade;
     private String status; 
-
+ 
     // Construtor vazio
     public Amizade() {}
 

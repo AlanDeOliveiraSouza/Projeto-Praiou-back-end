@@ -22,8 +22,9 @@ public class MySQLConnection {
             Statement stmt = c.createStatement();
 
             stmt.execute(criarBanco);
-            System.out.println("Banco de Dados " + DBNAME + " criado/verificado com sucesso!");
+            System.out.println("Banco de Dados '" + DBNAME + "' criado/verificado com sucesso!");
         } catch(SQLException e) {
+            e.printStackTrace();
             System.out.println("Erro ao criar/verificar banco de dados: " + e.getMessage());
         } 
 
@@ -42,12 +43,12 @@ public class MySQLConnection {
             "id_usuario INT NOT NULL AUTO_INCREMENT, " + 
             "nm_usuario VARCHAR(100) NOT NULL, " +  
             "nm_email_usuario VARCHAR(50) NOT NULL UNIQUE, " + 
-            "cd_senha VARCHAR(50) NOT NULL, " + 
-            "im_perfil LONGBLOB, " + 
-            "ds_bio VARCHAR(250), " + 
+            "cd_senha VARCHAR(255) NOT NULL, " + 
+            "im_perfil MEDIUMBLOB, " + 
+            "ds_bio VARCHAR(255), " + 
             "vl_pontuacao INT, " + 
             "ic_status_administrador TINYINT(1) NOT NULL DEFAULT 0, " +
-            "cd_token CHAR(10), " +
+            "cd_token CHAR(36), " +
             " PRIMARY KEY (id_usuario)" +
         ");";
 
@@ -94,7 +95,7 @@ public class MySQLConnection {
         "CREATE TABLE IF NOT EXISTS postagem (" + 
             "id_postagem INT AUTO_INCREMENT PRIMARY KEY, " + 
             "id_usuario INT NOT NULL, " + 
-            "im_postagem LONGBLOB, " + 
+            "im_postagem MEDIUMBLOB, " + 
             "ds_postagem VARCHAR(250), " + 
             "dt_postagem DATETIME DEFAULT NOW(), " + 
             "CONSTRAINT fk_postagem_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario) " + 
@@ -138,11 +139,12 @@ public class MySQLConnection {
 
         // Inserindo dados na tabela USUARIO
         String insercaoUsuario = 
-        "INSERT IGNORE usuario (nm_usuario, nm_email_usuario, cd_senha) VALUES " +
-        "('Alan de Oliveira', 'alansouza@gmail.com', '123456'), " + 
-        "('Emanuel de Brito', 'emanuelbrito@gmail.com', '123456'), " + 
-        "('Cauê Simões', 'cauesimoes@gmail.com', '123456'), " + 
-        "('Fellipe Cerqueira', 'fellipecerqueira@gmail.com', '123456'); ";
+        "INSERT IGNORE usuario (nm_usuario, nm_email_usuario, cd_senha, ds_bio, vl_pontuacao) VALUES " +
+        "('Alan Souza', 'alansouza@gmail.com', '$2a$10$4iQXP7MZ/83yxSBUKPELu.F6NL9W3MQ47oCx/2Ub9ZyFEAvbluFNW', 'Lorem ipsum dolor sit amet', 3), " + 
+        "('Emanuel de Brito', 'emanuelbrito@gmail.com', '$2a$10$d20jGP4jqqb1a.3uTvODROGqMfWumXSDJkGHYj68tWSN2QX5hOABy', 'Lorem ipsum dolor sit amet', 6), " + 
+        "('Cauê Simões', 'cauesimoes@gmail.com', '$2a$10$KB4LsbJ6HOBR.dAWW4VM5O/L38r6S4qtzIQMIAJCxNpngJBHYCbbC', 'Lorem ipsum dolor sit amet', 4), " + 
+        "('Fellipe Cerqueira', 'fellipecerqueira@gmail.com', '$2a$10$DUs0UX5Kp5wGQOmwYtHI7.6YBkXlnp.vRElyN/kHnDM8hRxuTaNqK', 'Lorem ipsum dolor sit amet', 5); ";
+        // Todas as senhas são '123456'
 
         try(Connection conexao = conectar(); Statement stmt = conexao.createStatement();) {
             // Executa os scripts no banco de dados

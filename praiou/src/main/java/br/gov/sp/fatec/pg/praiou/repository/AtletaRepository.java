@@ -4,14 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.gov.sp.fatec.pg.praiou.database.MySQLConnection;
 import br.gov.sp.fatec.pg.praiou.model.Atleta;
-import br.gov.sp.fatec.pg.praiou.model.Usuario;
 
 public class AtletaRepository {
 
@@ -70,37 +68,6 @@ public class AtletaRepository {
             }
         } catch(SQLException e) {
             System.out.println("Erro ao coletar usuário do banco: " + e.getMessage());
-        }
-
-        return atleta;
-    }
-
-    public static Atleta pegarAtletaPorToken(String token) throws Exception {
-        // Pegs um usuário do banco de dados a partir do token
-        
-        String sql = "SELECT * FROM usuario WHERE cd_token = ?";
-        
-        Atleta atleta = new Atleta();
-        
-        try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
-            pstmt.setString(1, token);
-            
-            ResultSet rs = pstmt.executeQuery();
-            if(rs.next()) {
-                atleta.setId(rs.getInt("id_usuario"));
-                atleta.setNome(rs.getString("nm_usuario"));
-                atleta.setEmail(rs.getString("nm_email_usuario"));
-                atleta.setDataNascimento(LocalDate.parse(rs.getString("dt_nascimento"))); // Converte data do banco para LocalDate
-                atleta.setFotoPerfil(rs.getString("im_perfil"));
-                atleta.setBio(rs.getString("ds_bio"));
-                atleta.setPontuacao(rs.getInt("vl_pontuacao"));
-                atleta.setStatusAdministrador(false);
-                atleta.setToken(token);
-            }
-        } catch(SQLException e) {
-            System.out.println("Erro ao buscar usuário: " + e.getMessage());
-        } catch(ParseException e) {
-            System.out.println("Erro na coleta de data do banco: " + e.getMessage());
         }
 
         return atleta;

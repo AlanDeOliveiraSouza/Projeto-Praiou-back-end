@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
@@ -76,6 +77,33 @@ public class UsuarioRepository {
             }
         }
         return usuarios;
+    }
+
+    public static Usuario pegarUsuarioPorToken(String token) throws Exception {
+        // Pega um usuário do banco de dados a partir do token
+        
+        String sql = "SELECT * FROM usuario WHERE cd_token = ?";
+        Usuario usuario = new Usuario();
+        
+        try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
+            pstmt.setString(1, token);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                // Verifica se o usuário é atleta ou administrador
+                boolean status = (rs.getInt("ic_status_administrador") == 1) ? true : false;
+                
+                usuario.setId(rs.getInt("id_usuario"));
+                usuario.setNome(rs.getString("nm_usuario"));
+                usuario.setEmail(rs.getString("nm_email_usuario"));
+                usuario.setStatusAdministrador(status);
+                usuario.setToken(token);
+            }
+        } catch(SQLException e) {
+            System.out.println("Erro ao buscar usuário: " + e.getMessage());
+        }
+        
+        return usuario;
     }
 
     public static boolean autenticar(String email, String senha) throws Exception {

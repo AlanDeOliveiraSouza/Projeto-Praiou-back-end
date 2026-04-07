@@ -30,12 +30,18 @@ public class Main {
         // Endpoint para verificar presenca do token no armazenamento local
         app.get("/token", ctx -> {
             String token = ctx.header("Authorization");
-            if(token != null) {
-                // Lógica na presença do token
-                ctx.json(Map.of("success", "true"));
-            } else {
+            try {
+                Usuario usuario = UsuarioRepository.pegarUsuarioPorToken(token);
+                if(usuario.getToken() == token) {
+                    ctx.json(Map.of("success", true));
+                    System.out.println("Bem-vindo " + usuario.getNome());
+                } else {
+                    ctx.json(Map.of("success", false));
+                    System.out.println("Token inválido, faça login novamente!");
+                }
+            } catch(Exception e) {
                 //ctx.status(401).json(Map.of("message", "Cabeçalho não encontrado."));
-                ctx.json(Map.of("success", "false"));
+                ctx.json(Map.of("success", false));
             }
         });
 
@@ -44,9 +50,9 @@ public class Main {
             Usuario usuario = ctx.bodyAsClass(Usuario.class);
             try {
                 UsuarioRepository.cadastrar(usuario.getNome(), usuario.getEmail(), usuario.getSenha());
-                ctx.json(Map.of("success", "true"));
+                ctx.json(Map.of("success", true));
             } catch(Exception e) {
-                ctx.json(Map.of("success", "false"));
+                ctx.json(Map.of("success", false));
                 System.out.println("Erro ao cadastrar usuário: " + e.getMessage());
             }
         });
@@ -62,10 +68,9 @@ public class Main {
                 // Cria token e atualiza no banco e no usuario
                 String token = UUID.randomUUID().toString();
                 UsuarioRepository.atualizarToken(usuario.getEmail(), token);
-                ctx.json(Map.of("token", token));
-                ctx.json(Map.of("success", "true"));
+                ctx.json(Map.of("token", token, "success", true));
             } catch(Exception e) {
-                ctx.json(Map.of("success", "false"));
+                ctx.json(Map.of("success", false));
             }
         });
 
@@ -88,7 +93,7 @@ public class Main {
                 if(token != null) {
                     UsuarioRepository.removerToken(token);
                 }
-                ctx.json(Map.of("success", "true"));
+                ctx.json(Map.of("success", true));
                 System.out.println("Logout efetuado!");
             } catch(Exception e) {
                 ctx.status(500).json(Map.of("error", "Erro ao fazer logout: " + e.getMessage()));
