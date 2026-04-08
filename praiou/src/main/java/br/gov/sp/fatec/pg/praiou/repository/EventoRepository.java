@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
@@ -22,7 +23,7 @@ public class EventoRepository {
 
     public static List<Evento> getTodosEventos() throws Exception {
         // Coleta todos os eventos do banco de dados
-        String sql = "SELECT * FROM eventos";
+        String sql = "SELECT id_evento, id_usuario, nm_evento, ds_evento, nm_endereco_evento, dt_evento, dt_publicacao_evento, hr_evento, qt_limite_participantes, FROM eventos";
 
         List<Evento> eventos = new ArrayList<>();
 
@@ -37,11 +38,11 @@ public class EventoRepository {
                 ev.setNome(rs.getString("nm_evento"));
                 ev.setDescricao(rs.getString("ds_evento"));
                 ev.setEndereco(rs.getString("nm_endereco_evento"));
-                /*ev.setData(rs.getDate("dt_evento")));
-                ev.setDataPublicacao(rs.getString("dt_publicacao_evento"));
-                ev.setHorario(rs.getString("hr_evento"));*/
+                ev.setData(LocalDate.parse(rs.getString("dt_evento")));
+                ev.setDataPublicacao(LocalDate.parse(rs.getString("dt_publicacao_evento")));
+                ev.setHorario(LocalTime.parse(rs.getString("hr_evento")));
                 ev.setLimiteParticipantes(rs.getInt("qt_limite_participantes"));
-                ev.setTipoEvento(TipoEvento.valueOf(rs.getString("hr_evento")));
+                ev.setTipoEvento(TipoEvento.valueOf(rs.getString("nm_tipo_evento")));
 
                 eventos.add(ev);
             }
@@ -52,7 +53,7 @@ public class EventoRepository {
     public static List<Evento> pegarEventosPorCategoria(TipoEvento categoria) throws Exception {
         // Pega um evento do banco de dados a partir de uma categoria
         
-        String sql = "SELECT * FROM evento WHERE cd_token = ?";
+        String sql = "SELECT * FROM evento WHERE nm_tipo_evento = ?";
 
         List<Evento> eventos = new ArrayList<>();
         
@@ -68,9 +69,9 @@ public class EventoRepository {
                 ev.setNome(rs.getString("nm_evento"));
                 ev.setDescricao(rs.getString("ds_evento"));
                 ev.setEndereco(rs.getString("nm_endereco_evento"));
-                /*ev.setData(rs.getDate("dt_evento"));
-                ev.setDataPublicacao(rs.getString("dt_publicacao_evento"));
-                ev.setHorario(rs.getTime("hr_evento"));*/
+                ev.setData(LocalDate.parse(rs.getString("dt_evento")));
+                ev.setDataPublicacao(LocalDate.parse(rs.getString("dt_publicacao_evento")));
+                ev.setHorario(LocalTime.parse(rs.getString("hr_evento")));
                 ev.setLimiteParticipantes(rs.getInt("qt_limite_participantes"));
                 ev.setTipoEvento(categoria);
 
