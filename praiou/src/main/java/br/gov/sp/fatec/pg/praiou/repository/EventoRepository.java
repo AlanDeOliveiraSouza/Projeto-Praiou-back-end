@@ -50,9 +50,9 @@ public class EventoRepository {
     }
 
     public static List<Evento> pegarEventosPorCategoria(TipoEvento categoria) throws Exception {
-        // Pega um usuário do banco de dados a partir do token
+        // Pega um evento do banco de dados a partir de uma categoria
         
-        String sql = "SELECT * FROM usuario WHERE cd_token = ?";
+        String sql = "SELECT * FROM evento WHERE cd_token = ?";
 
         List<Evento> eventos = new ArrayList<>();
         
