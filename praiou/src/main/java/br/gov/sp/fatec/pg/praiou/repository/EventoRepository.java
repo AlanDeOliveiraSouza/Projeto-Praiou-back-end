@@ -8,22 +8,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.mindrot.jbcrypt.BCrypt;
 
 import br.gov.sp.fatec.pg.praiou.database.MySQLConnection;
 import br.gov.sp.fatec.pg.praiou.model.Evento;
 import br.gov.sp.fatec.pg.praiou.enums.TipoEvento;
 
-//deletar dps
-/* import br.gov.sp.fatec.pg.praiou.model.Administrador;
-import br.gov.sp.fatec.pg.praiou.model.Atleta;
-import br.gov.sp.fatec.pg.praiou.model.Usuario; */
-
 public class EventoRepository {
 
     public static List<Evento> getTodosEventos() throws Exception {
         // Coleta todos os eventos do banco de dados
-        String sql = "SELECT id_evento, id_usuario, nm_evento, ds_evento, nm_endereco_evento, dt_evento, dt_publicacao_evento, hr_evento, qt_limite_participantes, FROM eventos";
+        String sql = "SELECT * FROM evento";
 
         List<Evento> eventos = new ArrayList<>();
 

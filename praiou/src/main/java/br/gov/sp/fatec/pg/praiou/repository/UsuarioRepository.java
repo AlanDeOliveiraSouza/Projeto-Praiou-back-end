@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
@@ -91,7 +90,7 @@ public class UsuarioRepository {
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()) {
                 // Verifica se o usuário é atleta ou administrador
-                boolean status = (rs.getInt("ic_status_administrador") == 1) ? true : false;
+                boolean status = rs.getInt("ic_status_administrador") == 1 ? true : false;
                 
                 usuario.setId(rs.getInt("id_usuario"));
                 usuario.setNome(rs.getString("nm_usuario"));
@@ -127,6 +126,28 @@ public class UsuarioRepository {
         }
         System.out.println("E-mail ou senha inválidos!"); 
         return false;
+    }
+    
+    public static boolean buscarToken(String token) throws Exception {
+        // Busca o token no banco de dados e retorna se ele existe
+
+        String sql = "SELECT cd_token FROM usuario WHERE cd_token = ?";
+        boolean resultado = false;
+
+        try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
+            pstmt.setString(1, token);
+
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                String tokenBanco = rs.getString("cd_token");
+                resultado = token.equals(tokenBanco);
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao buscar o token: " + e.getMessage());
+        }
+
+        return resultado;
     }
 
     public static void atualizarToken(String email, String token) throws Exception {
