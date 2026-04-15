@@ -15,7 +15,7 @@ import br.gov.sp.fatec.pg.praiou.enums.TipoEvento;
 
 public class EventoRepository {
 
-    public static List<Evento> getTodosEventos() throws Exception {
+    public static List<Evento> pegarTodosEventos() throws Exception {
         // Coleta todos os eventos do banco de dados
         String sql = "SELECT * FROM evento";
 
@@ -55,7 +55,7 @@ public class EventoRepository {
             pstmt.setString(1, categoria.toString());
 
             ResultSet rs = pstmt.executeQuery();
-            if(rs.next()) {   
+            while(rs.next()) {   
                 // É declarada uma nova instância de evento      
                 Evento ev = new Evento();       
                 ev.setIdEvento(rs.getInt("id_evento"));

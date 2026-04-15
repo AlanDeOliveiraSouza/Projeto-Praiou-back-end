@@ -114,7 +114,7 @@ public class Main {
         
         // Endpoint verificar token em todos as rotas privadas
         app.before("/api/*", ctx -> {
-            // Pega o cabeçalho e verifica se 
+            // Pega o cabeçalho e verifica se existe um usuário logado (token válido)
             String token = ctx.header("Authorization");
             try {
                 if(!UsuarioRepository.buscarToken(token)) {
@@ -134,7 +134,7 @@ public class Main {
         app.get("/api/eventos", ctx -> {
             // Busca todos os eventos no banco de dados
             try {
-                List<Evento> eventos = EventoRepository.getTodosEventos();
+                List<Evento> eventos = EventoRepository.pegarTodosEventos();
                 ctx.json(eventos);
                 ctx.json(Map.of("success", true));
             } catch(Exception e) {
@@ -159,6 +159,40 @@ public class Main {
             }
         });
         
+        /*
+        // Endpoint para listar todos os eventos de acordo com a busca de nome parcial
+        app.get("/api/eventos/{busca}", ctx -> {
+            // Busca os eventos com nome parcial no banco de dados
+            try {
+                String busca = ctx.pathParam("busca");
+                List<Evento> eventos = EventoRepository.pegarEventosPorNome(busca);
+                ctx.json(eventos);
+                ctx.json(Map.of("success", true));
+            } catch(Exception e) {
+                ctx.json(Map.of("success", false));
+                System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
+            }
+        });
+        */
+        
+        /*
+        // Endpoint para buscar evento pelo id
+        app.get("/api/eventos/{id}", ctx -> {
+            // Busca um evento por seu id
+            try {
+                Integer id = Integer.parseInt(ctx.pathParam("id"));
+                Evento evento = EventoRepository.pegarEventosPorId(id);
+                ctx.json(evento);
+                ctx.json(Map.of("success", true));
+            } catch(Exception e) {
+                ctx.json(Map.of("success", false));
+                System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
+            } catch(NumberFormatException e) {
+                ctx.json(Map.of("success", false));
+                System.out.println("Valor para 'id' inválido: " + e.getMessage());
+            }
+        });
+        */
         
     }
 
