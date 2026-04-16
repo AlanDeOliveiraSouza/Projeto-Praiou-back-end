@@ -11,9 +11,10 @@ import io.javalin.Javalin;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.lang.NumberFormatException;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception, NumberFormatException {
 
         // Criando banco de dados (caso ele não exista)
         MySQLConnection.criarBancoDeDados();
@@ -159,13 +160,16 @@ public class Main {
             }
         });
         
-        /*
+        
         // Endpoint para listar todos os eventos de acordo com a busca de nome parcial
         app.get("/api/eventos/{busca}", ctx -> {
             // Busca os eventos com nome parcial no banco de dados
             try {
                 String busca = ctx.pathParam("busca");
                 List<Evento> eventos = EventoRepository.pegarEventosPorNome(busca);
+                /*for (Evento e : eventos) {
+                    System.out.println(e.getNome());
+                }*/
                 ctx.json(eventos);
                 ctx.json(Map.of("success", true));
             } catch(Exception e) {
@@ -173,9 +177,8 @@ public class Main {
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
-        */
         
-        /*
+        
         // Endpoint para buscar evento pelo id
         app.get("/api/eventos/{id}", ctx -> {
             // Busca um evento por seu id
@@ -183,16 +186,17 @@ public class Main {
                 Integer id = Integer.parseInt(ctx.pathParam("id"));
                 Evento evento = EventoRepository.pegarEventosPorId(id);
                 ctx.json(evento);
+                //System.out.println(evento.getNome());
                 ctx.json(Map.of("success", true));
-            } catch(Exception e) {
-                ctx.json(Map.of("success", false));
-                System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             } catch(NumberFormatException e) {
                 ctx.json(Map.of("success", false));
                 System.out.println("Valor para 'id' inválido: " + e.getMessage());
+            } catch(Exception e) {
+                ctx.json(Map.of("success", false));
+                System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
-        */
+        
         
     }
 
