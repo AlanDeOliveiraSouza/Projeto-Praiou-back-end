@@ -117,7 +117,7 @@ public class MySQLConnection {
             "dt_edicao_mensagem TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " + 
             "CONSTRAINT fk_mensagem_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario), " + 
             "CONSTRAINT fk_mensagem_evento FOREIGN KEY (id_evento) REFERENCES evento (id_evento)" + 
-        ");";
+        ");"
 
         // Script de criação da tabela USUARIO_EVENTO
         String tabelaUsuarioEvento = 
