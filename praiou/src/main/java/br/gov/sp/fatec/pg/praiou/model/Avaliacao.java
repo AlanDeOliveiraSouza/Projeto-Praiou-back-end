@@ -5,37 +5,41 @@ import java.time.LocalDate;
 public class Avaliacao { 
 
     private Integer id;
-    private Usuario avaliador; 
-    private Evento evento;     // O EVENTO que está sendo avaliado
+    private Usuario avaliador;  
+    private Usuario avaliado;   
+    private Evento evento;      
     private boolean curtida;   
     private LocalDate dataAvaliacao; 
 
-    // Construtor Vazio
     public Avaliacao() {}
 
-    // Construtor Básico 
-    public Avaliacao(Usuario avaliador, Evento evento, boolean curtida) {
+    public Avaliacao(Usuario avaliador, Usuario avaliado, Evento evento, boolean curtida) {
         this.avaliador = avaliador;
+        this.avaliado = avaliado;
         this.evento = evento;
         this.curtida = curtida;
         this.dataAvaliacao = LocalDate.now();
     }
 
-    // Construtor Completo 
-    public Avaliacao(Integer id, Usuario avaliador, Evento evento, boolean curtida, LocalDate dataAvaliacao) {
+    
+    public Avaliacao(Integer id, Usuario avaliador, Usuario avaliado, Evento evento, boolean curtida, LocalDate dataAvaliacao) {
         this.id = id;
         this.avaliador = avaliador;
+        this.avaliado = avaliado;
         this.evento = evento;
         this.curtida = curtida;
         this.dataAvaliacao = dataAvaliacao;
     }
 
-    // Getters e Setters
+
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
     public Usuario getAvaliador() { return avaliador; }
     public void setAvaliador(Usuario avaliador) { this.avaliador = avaliador; }
+
+    public Usuario getAvaliado() { return avaliado; }
+    public void setAvaliado(Usuario avaliado) { this.avaliado = avaliado; }
 
     public Evento getEvento() { return evento; }
     public void setEvento(Evento evento) { this.evento = evento; }
