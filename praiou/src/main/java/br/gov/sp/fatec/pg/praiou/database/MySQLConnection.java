@@ -67,13 +67,16 @@ public class MySQLConnection {
 
         // Script de criação da tabela AVALIACAO
         String tabelaAvaliacao = 
-        "CREATE TABLE IF NOT EXISTS avaliacao (" + 
-            "id_avaliacao INT AUTO_INCREMENT PRIMARY KEY, " + 
-            "id_usuario INT NOT NULL, " + 
-            "id_usuario_avaliado INT NOT NULL, " + 
-            "ic_like_dislike_avaliacao TINYINT(1) NOT NULL, " + 
-            "CONSTRAINT fk_avaliacao_usuario1 FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario), " + 
-            "CONSTRAINT fk_avaliacao_usuario2 FOREIGN KEY (id_usuario_avaliado) REFERENCES usuario (id_usuario)" +
+    "CREATE TABLE IF NOT EXISTS avaliacao ("
+            "id_avaliacao INT AUTO_INCREMENT PRIMARY KEY," + 
+            "id_usuario_avaliador INT NOT NULL," +    
+            "id_usuario_avaliado INT NOT NULL," +     
+            "id_evento INT NOT NULL," +               
+            "ic_like_dislike_avaliacao TINYINT(1) NOT NULL," +
+            "dt_avaliacao DATE NOT NULL," +
+            "CONSTRAINT fk_aval_avaliador FOREIGN KEY (id_usuario_avaliador) REFERENCES usuario (id_usuario)," +
+            "CONSTRAINT fk_aval_avaliado FOREIGN KEY (id_usuario_avaliado) REFERENCES usuario (id_usuario)," +
+            "CONSTRAINT fk_aval_evento FOREIGN KEY (id_evento) REFERENCES evento (id_evento)" +
         ");";
 
         // Script de criação da tabela EVENTO
