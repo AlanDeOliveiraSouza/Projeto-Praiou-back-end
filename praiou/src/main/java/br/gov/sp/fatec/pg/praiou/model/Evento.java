@@ -74,7 +74,7 @@ public class Evento{
     public LocalDate getData() {
         return data;
     }
-    public void setDataEvento(LocalDate data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
     public LocalDate getDataPublicacao() {
