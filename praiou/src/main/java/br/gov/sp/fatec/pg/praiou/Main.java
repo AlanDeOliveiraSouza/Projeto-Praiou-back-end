@@ -136,8 +136,7 @@ public class Main {
             // Busca todos os eventos no banco de dados
             try {
                 List<Evento> eventos = EventoRepository.pegarTodosEventos();
-                ctx.json(eventos);
-                ctx.json(Map.of("success", true));
+                ctx.status(200).json(eventos);
             } catch(Exception e) {
                 ctx.json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
@@ -146,14 +145,14 @@ public class Main {
         
         
         // Endpoint para listar todos os eventos de uma determinada categoria
-        app.get("/api/eventos/{categoria}", ctx -> {
+        app.get("/api/eventos/type={categoria}", ctx -> {
             // Busca os eventos desta categoria no banco de dados
             try {
                 // Converte a categoria para enum e realiza a busca
                 TipoEvento categoria = TipoEvento.valueOf(ctx.pathParam("categoria").toUpperCase());
                 List<Evento> eventos = EventoRepository.pegarEventosPorCategoria(categoria);
-                ctx.json(eventos);
-                ctx.json(Map.of("success", true));
+                ctx.status(200).json(eventos);
+                //ctx.json(Map.of("success", true));
             } catch(Exception e) {
                 ctx.json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
@@ -162,16 +161,15 @@ public class Main {
         
         
         // Endpoint para listar todos os eventos de acordo com a busca de nome parcial
-        app.get("/api/eventos/{busca}", ctx -> {
+        app.get("/api/eventos/search={busca}", ctx -> {
             // Busca os eventos com nome parcial no banco de dados
             try {
                 String busca = ctx.pathParam("busca");
                 List<Evento> eventos = EventoRepository.pegarEventosPorNome(busca);
-                /*for (Evento e : eventos) {
-                    System.out.println(e.getNome());
-                }*/
-                ctx.json(eventos);
-                ctx.json(Map.of("success", true));
+                // for (Evento e : eventos) {
+                //     System.out.println(e.getNome());
+                // }
+                ctx.status(200).json(eventos);
             } catch(Exception e) {
                 ctx.json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
@@ -180,14 +178,13 @@ public class Main {
         
         
         // Endpoint para buscar evento pelo id
-        app.get("/api/eventos/{id}", ctx -> {
+        app.get("/api/eventos/id={id}", ctx -> {
             // Busca um evento por seu id
             try {
                 Integer id = Integer.parseInt(ctx.pathParam("id"));
                 Evento evento = EventoRepository.pegarEventosPorId(id);
-                ctx.json(evento);
                 //System.out.println(evento.getNome());
-                ctx.json(Map.of("success", true));
+                ctx.status(200).json(evento);
             } catch(NumberFormatException e) {
                 ctx.json(Map.of("success", false));
                 System.out.println("Valor para 'id' inválido: " + e.getMessage());
