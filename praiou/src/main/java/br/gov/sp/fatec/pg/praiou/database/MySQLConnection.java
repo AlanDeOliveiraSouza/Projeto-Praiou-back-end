@@ -53,7 +53,7 @@ public class MySQLConnection {
 
         // Script de criação da tabela AMIZADE
         String tabelaAmizade = 
-    "CREATE TABLE IF NOT EXISTS amizade (" +
+        "CREATE TABLE IF NOT EXISTS amizade (" +
             "id_amizade INT NOT NULL AUTO_INCREMENT," +
             "id_usuario INT NOT NULL, " +
             "id_usuario_recebedor_amizade INT NOT NULL," +
@@ -61,12 +61,12 @@ public class MySQLConnection {
             "ic_status_pendente_aceito ENUM('PENDENTE', 'ACEITO') NOT NULL," +
             "PRIMARY KEY (id_amizade)," +             
             "CONSTRAINT fk_amizade_usuario1 FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario)," +
-            "CONSTRAINT fk_amizade_usuario2 FOREIGN KEY (id_usuario_recebedor_amizade) REFERENCES usuario (id_usuario)" + "
-        );";
+            "CONSTRAINT fk_amizade_usuario2 FOREIGN KEY (id_usuario_recebedor_amizade) REFERENCES usuario (id_usuario)" + 
+        ");";
 
         // Script de criação da tabela AVALIACAO
         String tabelaAvaliacao = 
-    "CREATE TABLE IF NOT EXISTS avaliacao ("
+        "CREATE TABLE IF NOT EXISTS avaliacao (" +
             "id_avaliacao INT AUTO_INCREMENT PRIMARY KEY," + 
             "id_usuario_avaliador INT NOT NULL," +    
             "id_usuario_avaliado INT NOT NULL," +     
@@ -116,7 +116,7 @@ public class MySQLConnection {
             "dt_edicao_mensagem TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " + 
             "CONSTRAINT fk_mensagem_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario), " + 
             "CONSTRAINT fk_mensagem_evento FOREIGN KEY (id_evento) REFERENCES evento (id_evento)" + 
-        ");"
+        ");";
 
         // Script de criação da tabela USUARIO_EVENTO
         String tabelaUsuarioEvento = 
