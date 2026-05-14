@@ -64,20 +64,6 @@ public class MySQLConnection {
             "CONSTRAINT fk_amizade_usuario2 FOREIGN KEY (id_usuario_recebedor_amizade) REFERENCES usuario (id_usuario)" + 
         ");";
 
-        // Script de criação da tabela AVALIACAO
-        String tabelaAvaliacao = 
-        "CREATE TABLE IF NOT EXISTS avaliacao (" +
-            "id_avaliacao INT AUTO_INCREMENT PRIMARY KEY," + 
-            "id_usuario_avaliador INT NOT NULL," +    
-            "id_usuario_avaliado INT NOT NULL," +     
-            "id_evento INT NOT NULL," +               
-            "ic_like_dislike_avaliacao TINYINT(1) NOT NULL," +
-            "dt_avaliacao DATE NOT NULL," +
-            "CONSTRAINT fk_aval_avaliador FOREIGN KEY (id_usuario_avaliador) REFERENCES usuario (id_usuario)," +
-            "CONSTRAINT fk_aval_avaliado FOREIGN KEY (id_usuario_avaliado) REFERENCES usuario (id_usuario)," +
-            "CONSTRAINT fk_aval_evento FOREIGN KEY (id_evento) REFERENCES evento (id_evento)" +
-        ");";
-
         // Script de criação da tabela EVENTO
         String tabelaEvento = 
         "CREATE TABLE IF NOT EXISTS evento (" + 
@@ -92,6 +78,20 @@ public class MySQLConnection {
             "qt_limite_participantes INTEGER, " + 
             "dt_publicacao_evento DATE DEFAULT NOW(), " + 
             "CONSTRAINT fk_evento_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario)" + 
+        ");";
+
+        // Script de criação da tabela AVALIACAO
+        String tabelaAvaliacao = 
+        "CREATE TABLE IF NOT EXISTS avaliacao (" +
+            "id_avaliacao INT AUTO_INCREMENT PRIMARY KEY," + 
+            "id_usuario_avaliador INT NOT NULL," +    
+            "id_usuario_avaliado INT NOT NULL," +     
+            "id_evento INT NOT NULL," +               
+            "ic_like_dislike_avaliacao TINYINT(1) NOT NULL," +
+            "dt_avaliacao DATE NOT NULL," +
+            "CONSTRAINT fk_aval_avaliador FOREIGN KEY (id_usuario_avaliador) REFERENCES usuario (id_usuario)," +
+            "CONSTRAINT fk_aval_avaliado FOREIGN KEY (id_usuario_avaliado) REFERENCES usuario (id_usuario)," +
+            "CONSTRAINT fk_aval_evento FOREIGN KEY (id_evento) REFERENCES evento (id_evento)" +
         ");";
 
         // Script de criação da tabela POSTAGEM
@@ -155,23 +155,34 @@ public class MySQLConnection {
         "(id_usuario, nm_evento, nm_tipo_evento, ds_evento, dt_evento, hr_evento, nm_endereco_evento, qt_limite_participantes) VALUES " + 
         "(2, 'Futebol na praia', 'FUTEBOL', 'Venham e se divirtam conosco!', '2026-04-24', '15:30:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6), " + 
         "(4, 'Futebol com novos colegas', 'FUTEBOL', 'Vamos aproveitar o fim de tarde', '2026-04-21', '16:00:00', 'Av Pres. Castelo Branco, 2762, Guilhermina - Praia Grande', 5)";
+        
+        // Inserindo dados na tabela MENSAGEM
+        String insercaoMensagem = 
+        "INSERT IGNORE mensagem (id_usuario, id_evento, ds_mensagem) values " +
+        "(1, 1, 'olá mundo')," +
+        "(1, 1, 'olá mundo')," +
+        "(3, 1, 'olá mundo')," +
+        "(3, 1, 'olá mundo')," +
+        "(1, 1, 'olá mundo')";
 
         try(Connection conexao = conectar(); Statement stmt = conexao.createStatement();) {
             // Executa os scripts no banco de dados
 
             stmt.execute(tabelaUsuario);
             stmt.execute(tabelaAmizade);
-            stmt.execute(tabelaAvaliacao);
             stmt.execute(tabelaEvento);
+            stmt.execute(tabelaAvaliacao);            
             stmt.execute(tabelaPostagem);
             stmt.execute(tabelaMensagem);
             stmt.execute(tabelaUsuarioEvento);
             stmt.execute(tabelaAvaliacaoPostagem);
+            System.out.println("Tabelas criadas/verificadas com sucesso!");
 
             stmt.execute(insercaoUsuario);
             stmt.execute(insercaoEvento);
-
-            System.out.println("Tabelas criadas/verificadas com sucesso!");
+            //stmt.execute(insercaoMensagem);
+            System.out.println("Dados inseridos nas com sucesso!");
+            
         } catch(Exception e) {
             System.out.println("Erro ao criar/verificar banco de dados: " + e.getMessage());
         }

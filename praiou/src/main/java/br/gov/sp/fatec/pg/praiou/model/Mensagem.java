@@ -5,8 +5,10 @@ import java.time.LocalDate;
 public class Mensagem {
 
     private Integer id;
-    private Usuario remetente;
-    private Evento evento; 
+    private Integer idRemetente;
+    private Integer idEvento;
+    //private Usuario remetente;
+    //private Evento evento; 
     private String conteudo; 
     private LocalDate dataEnvio;
     private LocalDate dataEdicao;    
@@ -15,18 +17,22 @@ public class Mensagem {
     public Mensagem() {}
 
     // Construtor básico de envio
-    public Mensagem(Usuario remetente, Evento evento, String conteudo) {
-        this.remetente = remetente;
-        this.evento = evento;
+    public Mensagem(/*Usuario remetente, Evento evento,*/ Integer idRemetente, Integer idEvento, String conteudo) {
+        //this.remetente = remetente;
+        //this.evento = evento;        
+        this.idRemetente = idRemetente;
+        this.idEvento = idEvento;
         this.conteudo = conteudo;
         this.dataEnvio = LocalDate.now();
     }
 
     // Construtor completo
-    public Mensagem(Integer id, Usuario remetente, Evento evento, String conteudo, LocalDate dataEnvio, LocalDate dataEdicao) {
+    public Mensagem(/*Usuario remetente, Evento evento,*/ Integer id, Integer idRemetente, Integer idEvento, String conteudo, LocalDate dataEnvio, LocalDate dataEdicao) {
+        //this.remetente = remetente;
+        //this.evento = evento;
         this.id = id;
-        this.remetente = remetente;
-        this.evento = evento;
+        this.idRemetente = idRemetente;      
+        this.idEvento = idEvento;  
         this.conteudo = conteudo;
         this.dataEnvio = dataEnvio;
         this.dataEdicao = dataEdicao;
@@ -41,21 +47,38 @@ public class Mensagem {
         this.id = id;
     }
 
-    public Usuario getRemetente() {
-        return remetente;
+    // public Usuario getRemetente() {
+    //     return remetente;
+    // }
+
+    // public void setRemetente(Usuario remetente) {
+    //     this.remetente = remetente;
+    // }
+
+    public Integer getIdRemetente() {
+        return idRemetente;
     }
 
-    public void setRemetente(Usuario remetente) {
-        this.remetente = remetente;
+    public void setIdRemetente(Integer idRemetente) {
+        this.idRemetente = idRemetente;
     }
 
-    public Evento getEvento() {
-        return evento;
+    // public Evento getEvento() {
+    //     return evento;
+    // }
+
+    // public void setEvento(Evento evento) {
+    //     this.evento = evento;
+    // }
+
+    public Integer getIdEvento() {
+        return idEvento;
     }
 
-    public void setEvento(Evento evento) {
-        this.evento = evento;
+    public void setIdEvento(Integer idEvento) {
+        this.idEvento = idEvento;
     }
+
 
     public String getConteudo() {
         return conteudo;

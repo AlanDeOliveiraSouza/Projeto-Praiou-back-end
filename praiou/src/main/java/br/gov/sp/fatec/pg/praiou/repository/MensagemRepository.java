@@ -34,7 +34,7 @@ public class MensagemRepository {
     }
 
     
-    public static List<Mensagem> buscarMensagensPorEvento(int idEvento) throws Exception {
+    public static List<Mensagem> buscarMensagensPorEvento(Integer idEvento) throws Exception {
         String sql = "SELECT id_mensagem, id_usuario, ds_mensagem, dt_mensagem, dt_edicao_mensagem FROM mensagem WHERE id_evento = ? ORDER BY dt_mensagem ASC;";
         List<Mensagem> chat = new ArrayList<>();
 
@@ -47,19 +47,21 @@ public class MensagemRepository {
             while (rs.next()) {
                 Mensagem m = new Mensagem();
                 m.setId(rs.getInt("id_mensagem"));
+                m.setIdRemetente(rs.getInt("id_usuario"));
+                m.setIdEvento(idEvento);
                 m.setConteudo(rs.getString("ds_mensagem"));
-                
-                
+                System.out.println(rs.getInt("id_usuario") + " - " + m.getConteudo());
                 m.setDataEnvio(rs.getTimestamp("dt_mensagem").toLocalDateTime().toLocalDate());
                 m.setDataEdicao(rs.getTimestamp("dt_edicao_mensagem").toLocalDateTime().toLocalDate());
 
-                
-                Usuario remetente = new Atleta(); 
-                remetente.setId(rs.getInt("id_usuario"));
-                m.setRemetente(remetente);
+                // Usuario remetente = new Atleta(); 
+                // remetente.setId(rs.getInt("id_usuario"));
+                // m.setRemetente(remetente);
 
                 chat.add(m);
             }
+        } catch(SQLException e) {
+            System.out.println("Erro ao buscar mensagens desse evento: " + e.getMessage());
         }
         return chat;
     }

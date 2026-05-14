@@ -4,9 +4,13 @@ import br.gov.sp.fatec.pg.praiou.database.MySQLConnection;
 import br.gov.sp.fatec.pg.praiou.enums.TipoEvento;
 import br.gov.sp.fatec.pg.praiou.model.Atleta;
 import br.gov.sp.fatec.pg.praiou.model.Evento;
+import br.gov.sp.fatec.pg.praiou.model.Mensagem;
 import br.gov.sp.fatec.pg.praiou.model.Usuario;
+
 import br.gov.sp.fatec.pg.praiou.repository.EventoRepository;
 import br.gov.sp.fatec.pg.praiou.repository.UsuarioRepository;
+import br.gov.sp.fatec.pg.praiou.repository.MensagemRepository;
+
 import io.javalin.Javalin;
 import java.util.List;
 import java.util.Map;
@@ -112,7 +116,6 @@ public class Main {
             }
         });
 
-        
         // Endpoint verificar token em todos as rotas privadas
         app.before("/api/*", ctx -> {
             // Pega o cabeçalho e verifica se existe um usuário logado (token válido)
@@ -129,20 +132,20 @@ public class Main {
             }
         });
         
-        // EVENTOS
-        
+
+
+        // --- ENDPOINTS DOS EVENTOS ---
         // Endpoint para listar todos os eventos
         app.get("/api/eventos", ctx -> {
             // Busca todos os eventos no banco de dados
             try {
                 List<Evento> eventos = EventoRepository.pegarTodosEventos();
-                ctx.status(200).json(eventos);
+                ctx.status(200).json(Map.of("eventos", eventos, "success", true));
             } catch(Exception e) {
                 ctx.json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
-        
         
         // Endpoint para listar todos os eventos de uma determinada categoria
         app.get("/api/eventos/type={categoria}", ctx -> {
@@ -151,14 +154,13 @@ public class Main {
                 // Converte a categoria para enum e realiza a busca
                 TipoEvento categoria = TipoEvento.valueOf(ctx.pathParam("categoria").toUpperCase());
                 List<Evento> eventos = EventoRepository.pegarEventosPorCategoria(categoria);
-                ctx.status(200).json(eventos);
+                ctx.status(200).json(Map.of("eventos", eventos, "success", true));
                 //ctx.json(Map.of("success", true));
             } catch(Exception e) {
                 ctx.json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
-        
         
         // Endpoint para listar todos os eventos de acordo com a busca de nome parcial
         app.get("/api/eventos/search={busca}", ctx -> {
@@ -169,22 +171,21 @@ public class Main {
                 // for (Evento e : eventos) {
                 //     System.out.println(e.getNome());
                 // }
-                ctx.status(200).json(eventos);
+                ctx.status(200).json(Map.of("eventos", eventos, "success", true));
             } catch(Exception e) {
                 ctx.json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
         
-        
         // Endpoint para buscar evento pelo id
-        app.get("/api/eventos/id={id}", ctx -> {
+        app.get("/api/eventos/{id}", ctx -> {
             // Busca um evento por seu id
             try {
                 Integer id = Integer.parseInt(ctx.pathParam("id"));
                 Evento evento = EventoRepository.pegarEventosPorId(id);
                 //System.out.println(evento.getNome());
-                ctx.status(200).json(evento);
+                ctx.status(200).json(Map.of("evento", evento, "success", false));
             } catch(NumberFormatException e) {
                 ctx.json(Map.of("success", false));
                 System.out.println("Valor para 'id' inválido: " + e.getMessage());
@@ -194,7 +195,75 @@ public class Main {
             }
         });
         
-        
+
+
+        // --- ENDPOINTS DAS MENSAGENS ---
+        // Endpoint para busca de todas as mensagens de um evento
+        app.get("/api/eventos/{id}/msgs", ctx ->{
+            try{
+                Integer id = Integer.parseInt(ctx.pathParam("id"));
+                List<Mensagem> mensagens = MensagemRepository.buscarMensagensPorEvento(id);
+                ctx.status(200).json(Map.of("mensagens", mensagens));
+            } catch(NumberFormatException e) {
+                ctx.status(400).json(Map.of("success",false));
+                System.out.println("Valor para 'id' inválido: " + e.getMessage());
+            } catch(Exception e){
+                ctx.status(500).json(Map.of("success",false));
+                System.out.println("Erro ao buscar mensagens no banco de dados: " + e.getMessage());
+            }
+        });
+
+        //Endpoint para criar mensagens novas
+        app.post("api/eventos/{id}/msgs", ctx -> {
+            try{
+                Integer idEvento = Integer.parseInt(ctx.pathParam("id"));
+                Mensagem msg = ctx.bodyAsClass(Mensagem.class);
+                MensagemRepository.enviarMensagem(msg.getIdRemetente(), idEvento, msg.getConteudo());
+                ctx.status(201).json(Map.of("idEvento", idEvento, 
+                                            "idRemetente", msg.getIdRemetente(), 
+                                            "conteudo", msg.getConteudo()));
+            } catch(NumberFormatException e) {
+                ctx.status(400).json(Map.of("success",false));
+                System.out.println("Valor para 'id' inválido: " + e.getMessage());
+            } catch(Exception e){
+                ctx.status(500).json(Map.of("success",false));
+                System.out.println("Erro ao enviar mensagens no banco de dados: " + e.getMessage());
+            }        
+        });
+
+        //Endpoint para atualizar mensagem
+        //api/eventos/1/msgs?id=1
+        app.put("api/eventos/{id}/msgs", ctx -> {
+            try{
+                Integer idMensagem = Integer.parseInt(ctx.queryParam("id"));
+                Mensagem msg = ctx.bodyAsClass(Mensagem.class);
+                MensagemRepository.editarMensagem(idMensagem, msg.getConteudo());
+                ctx.status(201).json(Map.of("success",true,
+                                            "mensagem", msg.getConteudo()));
+            } catch(NumberFormatException e) {
+                ctx.status(400).json(Map.of("success",false));
+                System.out.println("Valor para 'id' inválido: " + e.getMessage());
+            } catch(Exception e){
+                ctx.status(500).json(Map.of("success",false));
+                System.out.println("Erro ao enviar mensagens no banco de dados: " + e.getMessage());
+            }          
+        });
+
+        //Endpoint para deletar mensagem
+        //api/eventos/1/msgs?id=1
+        app.delete("api/eventos/{id}/msgs", ctx -> {
+            try{
+                Integer idMensagem = Integer.parseInt(ctx.queryParam("id"));
+                MensagemRepository.deletarMensagem(idMensagem);
+                ctx.status(204).json(Map.of("success", true));
+            } catch(NumberFormatException e) {
+                ctx.status(400).json(Map.of("success", false));
+                System.out.println("Valor para 'id' inválido: " + e.getMessage());
+            } catch(Exception e){
+                ctx.status(500).json(Map.of("success", false));
+                System.out.println("Erro ao buscar mensagens no banco de dados: " + e.getMessage());
+            }
+        });
     }
 
 }
