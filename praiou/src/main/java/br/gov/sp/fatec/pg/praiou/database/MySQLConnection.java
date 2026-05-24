@@ -181,7 +181,7 @@ public class MySQLConnection {
             stmt.execute(insercaoUsuario);
             stmt.execute(insercaoEvento);
             //stmt.execute(insercaoMensagem);
-            System.out.println("Dados inseridos nas com sucesso!");
+            System.out.println("Dados inseridos nas tabelas com sucesso!");
             
         } catch(Exception e) {
             System.out.println("Erro ao criar/verificar banco de dados: " + e.getMessage());

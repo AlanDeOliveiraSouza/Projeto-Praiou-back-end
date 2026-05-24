@@ -78,7 +78,7 @@ public class EventoRepository {
         return eventos;
     }
 
-        public static List<Evento> pegarEventosPorNome(String nome) throws Exception {
+    public static List<Evento> pegarEventosPorNome(String nome) throws Exception {
         // Pega um evento do banco de dados a partir de um nome
         
         String sql = "SELECT * FROM evento WHERE nm_evento LIKE '%" + nome + "%'";
@@ -111,7 +111,7 @@ public class EventoRepository {
     }
 
 
-        public static Evento pegarEventosPorId(Integer id) throws Exception {
+    public static Evento pegarEventosPorId(Integer id) throws Exception {
         // Pega um evento do banco de dados a partir do ID dele
         
         String sql = "SELECT * FROM evento WHERE id_evento = ?";

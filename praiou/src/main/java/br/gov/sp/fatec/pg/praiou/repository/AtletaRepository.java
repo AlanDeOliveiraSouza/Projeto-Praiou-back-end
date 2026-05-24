@@ -74,7 +74,7 @@ public class AtletaRepository {
     }
 
     public static List<Atleta> pegarClassificacao() throws Exception {
-        String sql = "SELECT id_usuario, nm_usuario, vl_pontuacao FROM usuario ORDER BY vl_pontuacao";
+        String sql = "SELECT id_usuario, nm_usuario, vl_pontuacao, im_perfil FROM usuario ORDER BY vl_pontuacao DESC";
 
         List<Atleta> atletas = new ArrayList<>();
 
@@ -87,6 +87,7 @@ public class AtletaRepository {
                 a.setId(rs.getInt("id_usuario"));
                 a.setNome(rs.getString("nm_usuario"));
                 a.setPontuacao(rs.getInt("vl_pontuacao"));
+                a.setFotoPerfil(rs.getString("im_perfil"));
 
                 atletas.add(a);
             }

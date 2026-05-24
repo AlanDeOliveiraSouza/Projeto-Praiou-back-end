@@ -7,6 +7,7 @@ import br.gov.sp.fatec.pg.praiou.model.Evento;
 import br.gov.sp.fatec.pg.praiou.model.Mensagem;
 import br.gov.sp.fatec.pg.praiou.model.Usuario;
 
+import br.gov.sp.fatec.pg.praiou.repository.AtletaRepository;
 import br.gov.sp.fatec.pg.praiou.repository.EventoRepository;
 import br.gov.sp.fatec.pg.praiou.repository.UsuarioRepository;
 import br.gov.sp.fatec.pg.praiou.repository.MensagemRepository;
@@ -33,14 +34,14 @@ public class Main {
             ctx.json(Map.of("message","Praiou em execução!"));
         });
 
-        // AUTENTICAÇÃO
+        // ---ENDPOINTS DE AUTENTICAÇÃO ---
 
         // Endpoint para verificar presenca do token no armazenamento local
         app.get("/token", ctx -> {
             String token = ctx.header("Authorization");
             try {
                 if(UsuarioRepository.buscarToken(token)) {
-                    ctx.json(Map.of("success", true));
+                    ctx.status(200).json(Map.of("success", true));
                     System.out.println("Token validado!");
                 } else {
                     ctx.json(Map.of("success", false));
@@ -56,9 +57,9 @@ public class Main {
             Usuario usuario = ctx.bodyAsClass(Usuario.class);
             try {
                 UsuarioRepository.cadastrar(usuario.getNome(), usuario.getEmail(), usuario.getSenha());
-                ctx.json(Map.of("success", true));
+                ctx.status(201).json(Map.of("success", true));
             } catch(Exception e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao cadastrar usuário: " + e.getMessage());
             }
         });
@@ -74,16 +75,17 @@ public class Main {
                 // Cria token e atualiza no banco e no usuario
                 String token = UUID.randomUUID().toString();
                 UsuarioRepository.atualizarToken(usuario.getEmail(), token);
-                ctx.json(Map.of("token", token, "success", true));
+                Usuario usuarioBanco = UsuarioRepository.pegarUsuarioPorToken(token);
+                ctx.json(Map.of("usuario", usuarioBanco, "success", true));
             } catch(Exception e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(500).json(Map.of("success", false));
             }
         });
 
         /*
         // Endpoint para recuperar senha do usuário
         app.post("/senha/recuperar", ctx -> {
-	    Usuario usuario = ctx.bodyAsClass(Usuario.class);
+	        Usuario usuario = ctx.bodyAsClass(Usuario.class);
             String email = usuario.getEmail();
         });
         */
@@ -109,7 +111,7 @@ public class Main {
                 if(token != null) {
                     UsuarioRepository.removerToken(token);
                 }
-                ctx.json(Map.of("success", true));
+                ctx.status(204).json(Map.of("success", true));
                 System.out.println("Logout efetuado!");
             } catch(Exception e) {
                 ctx.status(500).json(Map.of("error", "Erro ao fazer logout: " + e.getMessage()));
@@ -142,7 +144,7 @@ public class Main {
                 List<Evento> eventos = EventoRepository.pegarTodosEventos();
                 ctx.status(200).json(Map.of("eventos", eventos, "success", true));
             } catch(Exception e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
@@ -157,7 +159,7 @@ public class Main {
                 ctx.status(200).json(Map.of("eventos", eventos, "success", true));
                 //ctx.json(Map.of("success", true));
             } catch(Exception e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
@@ -173,7 +175,7 @@ public class Main {
                 // }
                 ctx.status(200).json(Map.of("eventos", eventos, "success", true));
             } catch(Exception e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
@@ -187,10 +189,10 @@ public class Main {
                 //System.out.println(evento.getNome());
                 ctx.status(200).json(Map.of("evento", evento, "success", false));
             } catch(NumberFormatException e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(400).json(Map.of("success", false));
                 System.out.println("Valor para 'id' inválido: " + e.getMessage());
             } catch(Exception e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
@@ -264,6 +266,19 @@ public class Main {
                 System.out.println("Erro ao buscar mensagens no banco de dados: " + e.getMessage());
             }
         });
+
+        // --- ENDPOINT RANKING
+        // Endpoint para buscar Ranking
+        app.get("api/ranking", ctx -> {
+            try {
+                List<Atleta> ranking = AtletaRepository.pegarClassificacao();
+                ctx.status(200).json(Map.of("ranking", ranking, "success", true));
+            } catch(Exception e){
+                ctx.status(500).json(Map.of("success", false));
+                System.out.println("Erro ao buscar ranking no banco de dados: " + e.getMessage());
+            }
+        });
+
     }
 
 }
