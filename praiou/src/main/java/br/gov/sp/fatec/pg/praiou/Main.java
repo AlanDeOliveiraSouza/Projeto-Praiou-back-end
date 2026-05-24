@@ -194,7 +194,32 @@ public class Main {
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
-        
+
+        app.get("/api/meus_eventos", ctx -> {
+            // Busca todos os eventos que foram criados pelo usuario atual a partir de seu token
+            try {
+                String token = ctx.header("Authorization");
+                List<Evento> eventos = EventoRepository.pegarEventosDoCriador(token);
+                ctx.status(200).json(Map.of("eventos", eventos, "success", true));
+            } catch(Exception e) {
+                ctx.json(Map.of("success", false));
+                System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
+            }
+        });
+        app.get("/api/em_eventos", ctx -> {
+            // Busca todos os eventos em que o usuario atual está participando a partir de seu token
+            try {
+                String token = ctx.header("Authorization");
+                List<Evento> eventos = EventoRepository.pegarEventosParticipando(token);
+                ctx.status(200).json(Map.of("eventos", eventos, "success", true));
+            } catch(Exception e) {
+                ctx.json(Map.of("success", false));
+                System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
+            }
+        });
+
+
+
 
 
         // --- ENDPOINTS DAS MENSAGENS ---
