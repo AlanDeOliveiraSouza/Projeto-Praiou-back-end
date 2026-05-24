@@ -195,7 +195,7 @@ public class Main {
             }
         });
 
-        app.get("/api/meus_eventos", ctx -> {
+        app.get("/api/meus-eventos", ctx -> {
             // Busca todos os eventos que foram criados pelo usuario atual a partir de seu token
             try {
                 String token = ctx.header("Authorization");
@@ -206,7 +206,7 @@ public class Main {
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
-        app.get("/api/em_eventos", ctx -> {
+        app.get("/api/inscricoes", ctx -> {
             // Busca todos os eventos em que o usuario atual está participando a partir de seu token
             try {
                 String token = ctx.header("Authorization");
