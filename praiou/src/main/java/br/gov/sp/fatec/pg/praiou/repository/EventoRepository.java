@@ -157,5 +157,73 @@ public class EventoRepository {
         }
     }
     */
+   public static List<Evento> pegarEventosDoCriador(String token) throws Exception {
+        // Pega todos os evento do banco de dados que um usuario criou
+        
+        String sql = "SELECT * FROM evento e NATURAL JOIN usuario u WHERE u.cd_token = ?";
+
+        List<Evento> eventos = new ArrayList<>();
+        
+        try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
+            pstmt.setString(1, token);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()) {   
+                // É declarada uma nova instância de evento      
+                Evento ev = new Evento();       
+                ev.setIdEvento(rs.getInt("id_evento"));
+                ev.setIdUsuario(rs.getInt("id_usuario"));
+                ev.setNome(rs.getString("nm_evento"));
+                ev.setDescricao(rs.getString("ds_evento"));
+                ev.setEndereco(rs.getString("nm_endereco_evento"));
+                ev.setData(LocalDate.parse(rs.getString("dt_evento")));
+                ev.setDataPublicacao(LocalDate.parse(rs.getString("dt_publicacao_evento")));
+                ev.setHorario(LocalTime.parse(rs.getString("hr_evento")));
+                ev.setLimiteParticipantes(rs.getInt("qt_limite_participantes"));
+                ev.setTipoEvento(TipoEvento.valueOf(rs.getString("nm_tipo_evento")));
+
+                eventos.add(ev);
+            }
+        } catch(SQLException e) {
+            System.out.println("Erro ao buscar eventos: " + e.getMessage());
+        }
+        
+        return eventos;
+    }
+
+    public static List<Evento> pegarEventosParticipando(String token) throws Exception {
+        // Pega todos eventos do banco de dados em que o usuario está participando
+        
+        String sql =    "SELECT * FROM evento WHERE id_evento =(SELECT id_evento FROM usuario_evento ue "+
+                                                                "NATURAL JOIN usuario u WHERE u.cd_token = ?)";
+
+        List<Evento> eventos = new ArrayList<>();
+        
+        try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
+            pstmt.setString(1, token);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()) {   
+                // É declarada uma nova instância de evento      
+                Evento ev = new Evento();       
+                ev.setIdEvento(rs.getInt("id_evento"));             //System.out.println(ev.getIdEvento());
+                ev.setIdUsuario(rs.getInt("id_usuario"));
+                ev.setNome(rs.getString("nm_evento"));
+                ev.setDescricao(rs.getString("ds_evento"));
+                ev.setEndereco(rs.getString("nm_endereco_evento"));
+                ev.setData(LocalDate.parse(rs.getString("dt_evento")));
+                ev.setDataPublicacao(LocalDate.parse(rs.getString("dt_publicacao_evento")));
+                ev.setHorario(LocalTime.parse(rs.getString("hr_evento")));
+                ev.setLimiteParticipantes(rs.getInt("qt_limite_participantes"));
+                ev.setTipoEvento(TipoEvento.valueOf(rs.getString("nm_tipo_evento")));
+
+                
+
+                eventos.add(ev);
+            }
+        } catch(SQLException e) {
+            System.out.println("Erro ao buscar eventos: " + e.getMessage());
+        }
+        
+        return eventos;
+    }
 
 }
