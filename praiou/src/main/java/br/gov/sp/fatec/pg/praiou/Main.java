@@ -187,7 +187,7 @@ public class Main {
                 Integer id = Integer.parseInt(ctx.pathParam("id"));
                 Evento evento = EventoRepository.pegarEventosPorId(id);
                 //System.out.println(evento.getNome());
-                ctx.status(200).json(Map.of("evento", evento, "success", false));
+                ctx.status(200).json(Map.of("evento", evento, "success", true));
             } catch(NumberFormatException e) {
                 ctx.status(400).json(Map.of("success", false));
                 System.out.println("Valor para 'id' inválido: " + e.getMessage());
@@ -197,6 +197,7 @@ public class Main {
             }
         });
 
+        // Endpoint para buscar eventos criados pelo usuario
         app.get("/api/meus-eventos", ctx -> {
             // Busca todos os eventos que foram criados pelo usuario atual a partir de seu token
             try {
@@ -208,6 +209,8 @@ public class Main {
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
+
+        // Endpoint para buscar eventos em que o usuario está inscrito
         app.get("/api/inscricoes", ctx -> {
             // Busca todos os eventos em que o usuario atual está participando a partir de seu token
             try {
@@ -220,7 +223,24 @@ public class Main {
             }
         });
 
-
+        // Endpoint para inscrição de um usuario em um evento
+        app.post("/api/eventos/{id}/entrar", ctx -> {
+            // Cadastra um novo registro na tabela usuario_evento, 
+            // que é responsavel por registrar quais usuarios estão inscritos em quais eventos 
+            try {
+                Integer id = Integer.parseInt(ctx.pathParam("id")); //id do evento inscrito
+                String token = ctx.header("Authorization");         //para ver quem é o usuario
+                EventoRepository.inscreverUsuarioEvento(id, token);
+                //System.out.println(evento.getNome());
+                ctx.status(200).json(Map.of("success", true));
+            } catch(NumberFormatException e) {
+                ctx.json(Map.of("success", false));
+                System.out.println("Valor para 'id' inválido: " + e.getMessage());
+            } catch(Exception e) {
+                ctx.json(Map.of("success", false));
+                System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
+            }
+        });
 
 
 

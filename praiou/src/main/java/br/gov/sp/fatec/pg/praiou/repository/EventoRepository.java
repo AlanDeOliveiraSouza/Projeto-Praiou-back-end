@@ -192,9 +192,8 @@ public class EventoRepository {
 
     public static List<Evento> pegarEventosParticipando(String token) throws Exception {
         // Pega todos eventos do banco de dados em que o usuario está participando
-        
-        String sql =    "SELECT * FROM evento WHERE id_evento =(SELECT id_evento FROM usuario_evento ue "+
-                                                                "NATURAL JOIN usuario u WHERE u.cd_token = ?)";
+        String sql = "SELECT * FROM evento WHERE id_evento =(SELECT id_evento FROM usuario_evento ue "+
+                                                            "NATURAL JOIN usuario u WHERE u.cd_token = ?)";
 
         List<Evento> eventos = new ArrayList<>();
         
@@ -215,15 +214,24 @@ public class EventoRepository {
                 ev.setLimiteParticipantes(rs.getInt("qt_limite_participantes"));
                 ev.setTipoEvento(TipoEvento.valueOf(rs.getString("nm_tipo_evento")));
 
-                
-
                 eventos.add(ev);
             }
         } catch(SQLException e) {
             System.out.println("Erro ao buscar eventos: " + e.getMessage());
         }
-        
         return eventos;
+    }
+
+    public static void inscreverUsuarioEvento(int id, String token) throws Exception{
+        String sql = "INSERT INTO usuario_evento(id_evento, id_usuario) VALUES(?, (SELECT id_usuario FROM usuario WHERE cd_token = ?))";
+        try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
+            pstmt.setInt(1, id);
+            pstmt.setString(2, token);
+            pstmt.executeUpdate();
+        } catch(SQLException e) {
+            System.out.println("Erro ao cadastrar relação entre usuário e evento: " + e.getMessage());
+        }
+        System.out.println("Relação usuário-evento cadastrado com sucesso!");
     }
 
 }
