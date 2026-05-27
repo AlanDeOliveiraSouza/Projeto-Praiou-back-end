@@ -21,7 +21,7 @@ public class MySQLConnection {
             Connection c = DriverManager.getConnection(URL, "root", null); 
             Statement stmt = c.createStatement();
 
-            stmt.execute("DROP DATABASE " + DBNAME);
+            //stmt.execute("DROP DATABASE " + DBNAME);
 
             stmt.execute(criarBanco);
             System.out.println("Banco de Dados '" + DBNAME + "' criado/verificado com sucesso!");
