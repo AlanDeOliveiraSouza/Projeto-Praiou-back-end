@@ -148,6 +148,17 @@ public class Main {
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
+
+        // Endpoint para criação de eventos
+        app.post("/api/eventos", ctx ->{
+            Evento evento = ctx.bodyAsClass(Evento.class);
+            EventoRepository.CriarEvento(evento);
+            try {
+                ctx.status(201).json(Map.of("evento", evento, "success", true));
+            } catch (Exception e){
+                ctx.status(500).json(Map.of("success", false));
+            }
+        });
         
         // Endpoint para listar todos os eventos de uma determinada categoria
         app.get("/api/eventos/type={categoria}", ctx -> {

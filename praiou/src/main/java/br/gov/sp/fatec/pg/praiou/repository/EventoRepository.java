@@ -15,6 +15,47 @@ import br.gov.sp.fatec.pg.praiou.enums.TipoEvento;
 
 public class EventoRepository {
 
+    public static void CriarEvento(Evento evento) throws Exception{
+            String sql =    "INSERT INTO evento (id_usuario, nm_evento, nm_tipo_evento, ds_evento, dt_evento, hr_evento, nm_endereco_evento, qt_limite_participantes)" +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+
+        try (Connection conexao = MySQLConnection.conectar(); 
+             PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, evento.getIdUsuario());
+
+            pstmt.setString(2, evento.getNome());
+
+            pstmt.setString(3, evento.getTipoEvento().toString());
+
+            if      (evento.getDescricao() != null)
+                    pstmt.setString(4, evento.getDescricao());
+            else    pstmt.setNull(4, 0);
+
+            if      (evento.getData() != null)
+                    pstmt.setString(5, evento.getData().toString());
+            else    pstmt.setNull(5, 0);
+
+            if      (evento.getHorario() != null)
+                    pstmt.setString(6, evento.getHorario().toString());
+            else    pstmt.setNull(6, 0);
+
+            if      (evento.getEndereco() != null)
+                    pstmt.setString(7, evento.getEndereco());
+            else    pstmt.setNull(7, 0);
+
+            if      (evento.getLimiteParticipantes() != null)
+                    pstmt.setString(8, evento.getLimiteParticipantes().toString());
+            else    pstmt.setNull(8, 0);
+
+            pstmt.executeUpdate();
+            System.out.println("Evento criado!");
+        } catch (SQLException e) {
+            System.out.println("Erro ao enviar mensagem: " + e.getMessage());
+        }
+    }
+
+
     public static List<Evento> pegarTodosEventos() throws Exception {
         // Coleta todos os eventos do banco de dados
         String sql = "SELECT * FROM evento";
