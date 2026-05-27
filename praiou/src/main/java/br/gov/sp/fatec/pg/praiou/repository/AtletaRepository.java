@@ -15,7 +15,7 @@ public class AtletaRepository {
 
     public static Atleta pegarAtletaPorId(Integer id) throws Exception {
         // Pega os dados de um atleta do banco de dados pelo id
-
+	System.out.println("OK");
         String sql = "SELECT * FROM usuario WHERE id_usuario = ?";
 
         Atleta atleta = new Atleta();
@@ -35,8 +35,10 @@ public class AtletaRepository {
                 atleta.setPontuacao(rs.getInt("vl_pontuacao"));
                 atleta.setStatusAdministrador(false);
                 atleta.setToken(rs.getString("cd_token"));
+
             }
         } catch(SQLException e) {
+
             System.out.println("Erro ao coletar usuário do banco: " + e.getMessage());
         }
 

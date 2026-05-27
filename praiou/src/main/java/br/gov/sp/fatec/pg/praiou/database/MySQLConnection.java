@@ -21,7 +21,7 @@ public class MySQLConnection {
             Connection c = DriverManager.getConnection(URL, "root", null); 
             Statement stmt = c.createStatement();
 
-            // stmt.execute("DROP DATABASE " + DBNAME);
+            stmt.execute("DROP DATABASE " + DBNAME);
 
             stmt.execute(criarBanco);
             System.out.println("Banco de Dados '" + DBNAME + "' criado/verificado com sucesso!");
@@ -148,11 +148,11 @@ public class MySQLConnection {
 
         // Inserindo dados na tabela USUARIO
         String insercaoUsuario = 
-        "INSERT IGNORE usuario (nm_usuario, nm_email_usuario, cd_senha, ds_bio, vl_pontuacao) VALUES " +
-        "('Alan Souza', 'alandeoliveirasou@gmail.com', '$2a$10$4iQXP7MZ/83yxSBUKPELu.F6NL9W3MQ47oCx/2Ub9ZyFEAvbluFNW', 'Lorem ipsum dolor sit amet', 3), " + 
-        "('Emanuel de Brito', 'emanuelbrit16@gmail.com', '$2a$10$d20jGP4jqqb1a.3uTvODROGqMfWumXSDJkGHYj68tWSN2QX5hOABy', 'Lorem ipsum dolor sit amet', 6), " + 
-        "('Cauê Simões', 'cauemayo@gmail.com', '$2a$10$KB4LsbJ6HOBR.dAWW4VM5O/L38r6S4qtzIQMIAJCxNpngJBHYCbbC', 'Lorem ipsum dolor sit amet', 4), " + 
-        "('Fellipe Cerqueira', 'fefebairos@gmail.com', '$2a$10$DUs0UX5Kp5wGQOmwYtHI7.6YBkXlnp.vRElyN/kHnDM8hRxuTaNqK', 'Lorem ipsum dolor sit amet', 5); ";
+        "INSERT IGNORE usuario (nm_usuario, nm_email_usuario, cd_senha, ds_bio, vl_pontuacao, dt_nascimento, cd_token) VALUES " +
+        "('Alan Souza', 'alandeoliveirasou@gmail.com', '$2a$10$4iQXP7MZ/83yxSBUKPELu.F6NL9W3MQ47oCx/2Ub9ZyFEAvbluFNW', 'Lorem ipsum dolor sit amet', 3, '2001-01-01', 'ffffffffffddddddddddfdgfhghjgfdsasrs'), " + 
+        "('Emanuel de Brito', 'emanuelbrit16@gmail.com', '$2a$10$d20jGP4jqqb1a.3uTvODROGqMfWumXSDJkGHYj68tWSN2QX5hOABy', 'Lorem ipsum dolor sit amet', 6, '2001-01-01', 'ffffffffffddddddddddfdgfhghjgfdsasrs'), " + 
+        "('Cauê Simões', 'cauemayo@gmail.com', '$2a$10$KB4LsbJ6HOBR.dAWW4VM5O/L38r6S4qtzIQMIAJCxNpngJBHYCbbC', 'Lorem ipsum dolor sit amet', 4, '2001-01-01', 'ffffffffffddddddddddfdgfhghjgfdsasrs'), " + 
+        "('Fellipe Cerqueira', 'fefebairos@gmail.com', '$2a$10$DUs0UX5Kp5wGQOmwYtHI7.6YBkXlnp.vRElyN/kHnDM8hRxuTaNqK', 'Lorem ipsum dolor sit amet', 5, '2001-01-01', 'ffffffffffddddddddddfdgfhghjgfdsasrs'); ";
         // Todas as senhas são '123456'
     
         // Inserindo dados na tabela EVENTO
