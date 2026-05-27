@@ -177,7 +177,7 @@ public class EventoRepository {
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()) {
 
-                evento.setIdEvento(rs.getInt(id));
+                evento.setIdEvento(rs.getInt("id_evento"));
                 evento.setIdUsuario(rs.getInt("id_usuario"));
                 evento.setNome(rs.getString("nm_evento"));
                 evento.setDescricao(rs.getString("ds_evento"));
@@ -246,8 +246,9 @@ public class EventoRepository {
 
     public static List<Evento> pegarEventosParticipando(String token) throws Exception {
         // Pega todos eventos do banco de dados em que o usuario está participando
-        String sql = "SELECT * FROM evento WHERE id_evento =(SELECT id_evento FROM usuario_evento ue "+
-                                                            "NATURAL JOIN usuario u WHERE u.cd_token = ?)";
+        String sql = "SELECT * FROM evento e JOIN usuario_evento ue ON (ue.id_evento = e.id_evento) " + 
+                                            "JOIN usuario u ON (ue.id_usuario = u.id_usuario) " + 
+                                            "WHERE u.cd_token = ?";
 
         List<Evento> eventos = new ArrayList<>();
         
