@@ -67,9 +67,36 @@ public class AtletaRepository {
                 atleta.setToken(rs.getString("cd_token"));
             }
         } catch(SQLException e) {
-            System.out.println("Erro ao coletar usuário do banco: " + e.getMessage());
+            System.out.println("Erro ao buscar atleta do banco: " + e.getMessage());
         }
 
+        return atleta;
+    }
+
+    public static Atleta pegarPerfilPorToken(String token) throws Exception {
+        // Pega o perfil de um atleta do banco de dados a partir do token
+        
+        String sql = "SELECT * FROM usuario WHERE cd_token = ?";
+        Atleta atleta = new Atleta();
+        
+        try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
+            pstmt.setString(1, token);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                atleta.setId(rs.getInt("id_usuario"));
+                atleta.setNome(rs.getString("nm_usuario"));
+                atleta.setEmail(rs.getString("nm_email_usuario"));
+                atleta.setDataNascimento(LocalDate.parse(rs.getString("dt_nascimento"))); // Converte data do banco para LocalDate
+                atleta.setFotoPerfil(rs.getString("im_perfil"));
+                atleta.setBio(rs.getString("ds_bio"));
+                atleta.setPontuacao(rs.getInt("vl_pontuacao"));
+                atleta.setStatusAdministrador(false);
+            }
+        } catch(SQLException e) {
+            System.out.println("Erro ao buscar atleta: " + e.getMessage());
+        }
+        
         return atleta;
     }
 

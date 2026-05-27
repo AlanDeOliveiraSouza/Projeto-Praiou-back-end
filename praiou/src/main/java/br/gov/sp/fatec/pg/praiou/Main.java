@@ -6,15 +6,16 @@ import br.gov.sp.fatec.pg.praiou.model.Atleta;
 import br.gov.sp.fatec.pg.praiou.model.Evento;
 import br.gov.sp.fatec.pg.praiou.model.Mensagem;
 import br.gov.sp.fatec.pg.praiou.model.Usuario;
-
 import br.gov.sp.fatec.pg.praiou.repository.AtletaRepository;
 import br.gov.sp.fatec.pg.praiou.repository.EventoRepository;
 import br.gov.sp.fatec.pg.praiou.repository.UsuarioRepository;
 import br.gov.sp.fatec.pg.praiou.repository.MensagemRepository;
+import br.gov.sp.fatec.pg.praiou.service.EmailService;
 
 import io.javalin.Javalin;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.lang.NumberFormatException;
 
@@ -24,10 +25,23 @@ public class Main {
         // Criando banco de dados (caso ele não exista)
         MySQLConnection.criarBancoDeDados();
 
+        // Serviço de envio de e-mails
+        EmailService emailService = new EmailService();     
+
+        /* TESTE DE EMAIL
+        try {
+            UsuarioRepository.alterarCodigoRecuperacao("8788", "alandeoliveirasou@gmail.com");
+        } catch(Exception exc) {
+        }
+        String cont = emailService.getConteudoEmail(1, "8788");
+        new Thread(() -> emailService.enviarEmail("alandeoliveirasou@gmail.com", "Recuperação de Senha", cont)).start();
+        System.out.println(UsuarioRepository.compararCodigoRecuperacao("8788"));
+        */
+
         // Iniciando aplicação
         Javalin app = Javalin.create().start(7070);
 
-        // ENDPOINTS:
+        // --- ENDPOINTS:
 
         //  Endpoint da rota (raiz) "/"
         app.get("/", ctx -> {
@@ -85,15 +99,46 @@ public class Main {
         /*
         // Endpoint para recuperar senha do usuário
         app.post("/senha/recuperar", ctx -> {
-	        Usuario usuario = ctx.bodyAsClass(Usuario.class);
+            // instância do Random para gerar o código
+            Random random = new Random();
+
+	    Usuario usuario = ctx.bodyAsClass(Usuario.class);
             String email = usuario.getEmail();
+            String codigo = Integer.toString(random.nextInt(9000) + 1000); // Gera número aleatório entre 0 e 9999
+            // Primeiro, o código é registrado no banco de dados, para ser confirmado mais tarde pelo usuário
+            try {
+                UsuarioRepository.alterarCodigoRecuperacao(codigo, email);
+            } catch(Exception e) {
+                ctx.status(500).json(Map.of("success", false, "error", "Erro ao alterar codigo de recuperação: " + e.getMessage()));
+            }
+
+            // Depois o corpo do email é montado
+            String conteudo = emailService.getConteudoEmail(1, codigo);
+
+	    if (conteudo != null) {
+            	// É criada uma nova thread para executar o envio do e-mail sem diminuir o desempenho da API
+            	new Thread(() -> emailService.enviarEmail(email, "Recuperação de Senha", conteudo)).start();
+            } else {
+                ctx.status(500).json(Map.of("success", false));
+            }
         });
         */
         
         /*
         // Endpoint que recebe código de recuperação 
-        app.post("/senha/codigo", ctx -> {
-            
+        app.post("/senha/recuperar/{codigo}", ctx -> {
+            String codigo = ctx.pathParam("codigo");
+            try {
+                boolean resultado = UsuarioRepository.compararCodigoRecuperacao(codigo);
+                if(resultado) {
+                    ctx.status(204).json(Map.of("success", true));
+                    System.out.println("Código verificado!");
+                } else {
+                    ctx.status(401).json(Map.of("success", true));
+                }
+            } catch(Exception e) {
+                ctx.status(500).json(Map.of("error", "Erro ao verificar codigo: " + e.getMessage()));
+            }
         });
         */
 
@@ -129,12 +174,11 @@ public class Main {
                     return;
                 }
             } catch(Exception e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar token no banco de dados: " + e.getMessage());
             }
         });
         
-
 
         // --- ENDPOINTS DOS EVENTOS ---
         // Endpoint para listar todos os eventos
@@ -227,7 +271,7 @@ public class Main {
                 List<Evento> eventos = EventoRepository.pegarEventosDoCriador(token);
                 ctx.status(200).json(Map.of("eventos", eventos, "success", true));
             } catch(Exception e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
@@ -240,7 +284,7 @@ public class Main {
                 List<Evento> eventos = EventoRepository.pegarEventosParticipando(token);
                 ctx.status(200).json(Map.of("eventos", eventos, "success", true));
             } catch(Exception e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
@@ -256,10 +300,10 @@ public class Main {
                 //System.out.println(evento.getNome());
                 ctx.status(200).json(Map.of("success", true));
             } catch(NumberFormatException e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(400).json(Map.of("success", false));
                 System.out.println("Valor para 'id' inválido: " + e.getMessage());
             } catch(Exception e) {
-                ctx.json(Map.of("success", false));
+                ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar eventos no banco de dados: " + e.getMessage());
             }
         });
@@ -331,6 +375,22 @@ public class Main {
             } catch(Exception e){
                 ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar mensagens no banco de dados: " + e.getMessage());
+            }
+        });
+
+        // --- ENDPOINTS PERFIL
+        app.get("api/perfil", ctx -> {
+            String token = ctx.header("Authorization");
+            try {
+                Atleta atleta = AtletaRepository.pegarPerfilPorToken(token);
+                if(atleta.getId() != null) {
+                    ctx.status(200).json(Map.of("usuario", atleta, "success", true));
+                } else {
+                    ctx.status(404).json(Map.of("success", false));
+                }
+            } catch(Exception e) {
+                ctx.status(500).json(Map.of("success", false));
+                System.out.println("Erro ao buscar usuário no banco de dados: " + e.getMessage());
             }
         });
 

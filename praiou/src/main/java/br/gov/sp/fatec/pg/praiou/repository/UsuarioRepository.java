@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
@@ -181,21 +183,50 @@ public class UsuarioRepository {
         }
     }
 
-    /*
-    public static void alterarDadoUsuario(String dado, Integer id) throws Exception {
-        // Atualiza os dados de um usuário no banco de dados
+    public static void alterarCodigoRecuperacao(String codigo, String email) throws Exception {
+        // Atualiza o codigo de recuperação de senha de um usuário no banco de dados
 
-        String sql = "UPDATE usuario SET dado = ? WHERE id_usuario = ?";
-
+        String sql; 
+	if(codigo != null) { 
+            sql = "UPDATE usuario SET cd_recuperacao = ?, dt_criacao_codigo_recuperacao = NOW() WHERE nm_email_usuario = ?";
+        } else {
+            sql = "UPDATE usuario SET cd_recuperacao = ?, dt_criacao_codigo_recuperacao = NULL WHERE nm_email_usuario = ?";
+        }
+        
         try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
-            pstmt.setString(1, dado);
-            pstmt.setInt(2, id);
+            pstmt.setString(1, codigo);
+            pstmt.setString(2, email);
 
             pstmt.executeUpdate();
         } catch(SQLException e) {
-            System.out.println("Erro ao atualizar dado do usuário: " + e.getMessage());
+            System.out.println("Erro ao atualizar codigo de recuperação do usuário: " + e.getMessage());
         }
     }
-    */
+
+    public static boolean compararCodigoRecuperacao(String codigo) throws Exception {
+        // Verifica se o código de recuperação existe / é igual ao fornecido pelo usuario
+        boolean resultado = false;
+        
+        String sql = "SELECT cd_recuperacao, dt_criacao_codigo_recuperacao FROM usuario WHERE cd_recuperacao = ?";
+        
+        try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
+            pstmt.setString(1, codigo);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                // Verifica se o código foi encontrado
+		if(rs.getString("cd_recuperacao") != null) {
+                    // Agora é verificado se o código ainda é valido
+                    if(Duration.between(Instant.parse(rs.getString("dt_criacao_codigo_recuperacao")), Instant.now()).toMinutes() < 5) {
+                        // Se o timestamp do banco for de menos de cinco minutos (comparado à hora atual) ele aprova
+                        resultado = true;
+                    }
+                }
+            }
+        } catch(SQLException e) {
+            System.out.println("Erro ao verificar código de recuperação: " + e.getMessage());
+        }
+        return resultado;
+    }
 
 }

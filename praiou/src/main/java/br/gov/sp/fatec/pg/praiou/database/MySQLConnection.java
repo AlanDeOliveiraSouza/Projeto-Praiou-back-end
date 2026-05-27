@@ -44,6 +44,7 @@ public class MySQLConnection {
             "id_usuario INT NOT NULL AUTO_INCREMENT, " + 
             "nm_usuario VARCHAR(100) NOT NULL, " +  
             "nm_email_usuario VARCHAR(50) NOT NULL UNIQUE, " + 
+            "dt_nascimento DATE, " +
             "cd_senha VARCHAR(255) NOT NULL, " + 
             "im_perfil TEXT DEFAULT 'user.png', " + 
             "ds_bio VARCHAR(255), " + 
