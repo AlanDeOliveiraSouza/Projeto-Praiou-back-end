@@ -14,12 +14,14 @@ public class MySQLConnection {
     public static void criarBancoDeDados() {
         // Cria/verifica banco de dados
 
-        // Script de criação do banco de dados DB_PRAIOU
+        // Script de criação do banco de dados PRAIOU
         String criarBanco = "CREATE DATABASE IF NOT EXISTS " + DBNAME + ";";
 
         try {
             Connection c = DriverManager.getConnection(URL, "root", null); 
             Statement stmt = c.createStatement();
+
+            // stmt.execute("DROP DATABASE " + DBNAME);
 
             stmt.execute(criarBanco);
             System.out.println("Banco de Dados '" + DBNAME + "' criado/verificado com sucesso!");
@@ -43,11 +45,13 @@ public class MySQLConnection {
             "nm_usuario VARCHAR(100) NOT NULL, " +  
             "nm_email_usuario VARCHAR(50) NOT NULL UNIQUE, " + 
             "cd_senha VARCHAR(255) NOT NULL, " + 
-            "im_perfil MEDIUMBLOB, " + 
+            "im_perfil TEXT DEFAULT 'user.png', " + 
             "ds_bio VARCHAR(255), " + 
             "vl_pontuacao INT, " + 
             "ic_status_administrador TINYINT(1) NOT NULL DEFAULT 0, " +
             "cd_token CHAR(36), " +
+            "cd_recuperacao CHAR(4), " +
+            "dt_criacao_codigo_recuperacao TIMESTAMP, " +
             " PRIMARY KEY (id_usuario)" +
         ");";
 
@@ -144,17 +148,17 @@ public class MySQLConnection {
         // Inserindo dados na tabela USUARIO
         String insercaoUsuario = 
         "INSERT IGNORE usuario (nm_usuario, nm_email_usuario, cd_senha, ds_bio, vl_pontuacao) VALUES " +
-        "('Alan Souza', 'alansouza@gmail.com', '$2a$10$4iQXP7MZ/83yxSBUKPELu.F6NL9W3MQ47oCx/2Ub9ZyFEAvbluFNW', 'Lorem ipsum dolor sit amet', 3), " + 
-        "('Emanuel de Brito', 'emanuelbrito@gmail.com', '$2a$10$d20jGP4jqqb1a.3uTvODROGqMfWumXSDJkGHYj68tWSN2QX5hOABy', 'Lorem ipsum dolor sit amet', 6), " + 
-        "('Cauê Simões', 'cauesimoes@gmail.com', '$2a$10$KB4LsbJ6HOBR.dAWW4VM5O/L38r6S4qtzIQMIAJCxNpngJBHYCbbC', 'Lorem ipsum dolor sit amet', 4), " + 
-        "('Fellipe Cerqueira', 'fellipecerqueira@gmail.com', '$2a$10$DUs0UX5Kp5wGQOmwYtHI7.6YBkXlnp.vRElyN/kHnDM8hRxuTaNqK', 'Lorem ipsum dolor sit amet', 5); ";
+        "('Alan Souza', 'alandeoliveirasou@gmail.com', '$2a$10$4iQXP7MZ/83yxSBUKPELu.F6NL9W3MQ47oCx/2Ub9ZyFEAvbluFNW', 'Lorem ipsum dolor sit amet', 3), " + 
+        "('Emanuel de Brito', 'emanuelbrit16@gmail.com', '$2a$10$d20jGP4jqqb1a.3uTvODROGqMfWumXSDJkGHYj68tWSN2QX5hOABy', 'Lorem ipsum dolor sit amet', 6), " + 
+        "('Cauê Simões', 'cauemayo@gmail.com', '$2a$10$KB4LsbJ6HOBR.dAWW4VM5O/L38r6S4qtzIQMIAJCxNpngJBHYCbbC', 'Lorem ipsum dolor sit amet', 4), " + 
+        "('Fellipe Cerqueira', 'fefebairos@gmail.com', '$2a$10$DUs0UX5Kp5wGQOmwYtHI7.6YBkXlnp.vRElyN/kHnDM8hRxuTaNqK', 'Lorem ipsum dolor sit amet', 5); ";
         // Todas as senhas são '123456'
     
         // Inserindo dados na tabela EVENTO
         String insercaoEvento = "INSERT IGNORE evento " + 
-        "(id_usuario, nm_evento, nm_tipo_evento, ds_evento, dt_evento, hr_evento, nm_endereco_evento, qt_limite_participantes) VALUES " + 
-        "(2, 'Futebol na praia', 'FUTEBOL', 'Venham e se divirtam conosco!', '2026-04-24', '15:30:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6), " + 
-        "(4, 'Futebol com novos colegas', 'FUTEBOL', 'Vamos aproveitar o fim de tarde', '2026-04-21', '16:00:00', 'Av Pres. Castelo Branco, 2762, Guilhermina - Praia Grande', 5)";
+        "(id_evento, id_usuario, nm_evento, nm_tipo_evento, ds_evento, dt_evento, hr_evento, nm_endereco_evento, qt_limite_participantes) VALUES " + 
+        "(1, 2, 'Futebol na praia', 'FUTEBOL', 'Venham e se divirtam conosco!', '2026-04-24', '15:30:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6), " + 
+        "(1, 4, 'Futebol com novos colegas', 'FUTEBOL', 'Vamos aproveitar o fim de tarde', '2026-04-21', '16:00:00', 'Av Pres. Castelo Branco, 2762, Guilhermina - Praia Grande', 5)";
         
         // Inserindo dados na tabela MENSAGEM
         String insercaoMensagem = 
