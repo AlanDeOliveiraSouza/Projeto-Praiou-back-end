@@ -4,8 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
@@ -205,6 +206,9 @@ public class UsuarioRepository {
 
     public static boolean compararCodigoRecuperacao(String codigo) throws Exception {
         // Verifica se o código de recuperação existe / é igual ao fornecido pelo usuario
+
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         boolean resultado = false;
         
         String sql = "SELECT cd_recuperacao, dt_criacao_codigo_recuperacao FROM usuario WHERE cd_recuperacao = ?";
@@ -217,7 +221,12 @@ public class UsuarioRepository {
                 // Verifica se o código foi encontrado
 		if(rs.getString("cd_recuperacao") != null) {
                     // Agora é verificado se o código ainda é valido
-                    if(Duration.between(Instant.parse(rs.getString("dt_criacao_codigo_recuperacao")), Instant.now()).toMinutes() < 5) {
+
+                    LocalDateTime timestampBanco = LocalDateTime.parse(rs.getString("dt_criacao_codigo_recuperacao"), formatador);
+
+                    LocalDateTime timestampAtual = LocalDateTime.now();
+                    long tempoPassado = ChronoUnit.MINUTES.between(timestampBanco, timestampAtual);
+                    if(tempoPassado < 5) {
                         // Se o timestamp do banco for de menos de cinco minutos (comparado à hora atual) ele aprova
                         resultado = true;
                     }
@@ -227,6 +236,24 @@ public class UsuarioRepository {
             System.out.println("Erro ao verificar código de recuperação: " + e.getMessage());
         }
         return resultado;
+    }
+
+    public static void alterarSenha(String email, String novaSenha) throws Exception {
+        // Atualiza a senha do usuario no banco de dados
+
+        String sql = "UPDATE usuario SET cd_senha = ? WHERE nm_email_usuario = ?";
+
+        String senhaCriptografada = BCrypt.hashpw(novaSenha, BCrypt.gensalt());
+
+        try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
+            pstmt.setString(1, senhaCriptografada);
+            pstmt.setString(2, email);
+
+            pstmt.executeUpdate();
+            System.out.println("Senha atualizada!");
+        } catch(SQLException e) {
+            System.out.println("Erro ao atualizar senha: " + e.getMessage());
+        }
     }
 
 }

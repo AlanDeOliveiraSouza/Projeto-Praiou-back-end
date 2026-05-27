@@ -26,17 +26,7 @@ public class Main {
         MySQLConnection.criarBancoDeDados();
 
         // Serviço de envio de e-mails
-        EmailService emailService = new EmailService();     
-
-        /* TESTE DE EMAIL
-        try {
-            UsuarioRepository.alterarCodigoRecuperacao("8788", "alandeoliveirasou@gmail.com");
-        } catch(Exception exc) {
-        }
-        String cont = emailService.getConteudoEmail(1, "8788");
-        new Thread(() -> emailService.enviarEmail("alandeoliveirasou@gmail.com", "Recuperação de Senha", cont)).start();
-        System.out.println(UsuarioRepository.compararCodigoRecuperacao("8788"));
-        */
+        EmailService emailService = new EmailService();
 
         // Iniciando aplicação
         Javalin app = Javalin.create().start(7070);
@@ -90,13 +80,12 @@ public class Main {
                 String token = UUID.randomUUID().toString();
                 UsuarioRepository.atualizarToken(usuario.getEmail(), token);
                 Usuario usuarioBanco = UsuarioRepository.pegarUsuarioPorToken(token);
-                ctx.json(Map.of("usuario", usuarioBanco, "success", true));
+                ctx.status(200).json(Map.of("usuario", usuarioBanco, "success", true));
             } catch(Exception e) {
                 ctx.status(500).json(Map.of("success", false));
             }
         });
 
-        /*
         // Endpoint para recuperar senha do usuário
         app.post("/senha/recuperar", ctx -> {
             // instância do Random para gerar o código
@@ -116,15 +105,14 @@ public class Main {
             String conteudo = emailService.getConteudoEmail(1, codigo);
 
 	    if (conteudo != null) {
-            	// É criada uma nova thread para executar o envio do e-mail sem diminuir o desempenho da API
+            	// É criada uma nova thread para executar o envio do e-mail sem diminuir o desempenho da API (Esperar o envio do email para continuar a execução)
             	new Thread(() -> emailService.enviarEmail(email, "Recuperação de Senha", conteudo)).start();
+                ctx.status(201).json(Map.of("success", true));
             } else {
                 ctx.status(500).json(Map.of("success", false));
             }
         });
-        */
-        
-        /*
+
         // Endpoint que recebe código de recuperação 
         app.post("/senha/recuperar/{codigo}", ctx -> {
             String codigo = ctx.pathParam("codigo");
@@ -134,20 +122,26 @@ public class Main {
                     ctx.status(204).json(Map.of("success", true));
                     System.out.println("Código verificado!");
                 } else {
-                    ctx.status(401).json(Map.of("success", true));
+                    ctx.status(401).json(Map.of("success", false));
                 }
             } catch(Exception e) {
-                ctx.status(500).json(Map.of("error", "Erro ao verificar codigo: " + e.getMessage()));
+                ctx.status(500).json(Map.of("success", false, "error", "Erro ao verificar codigo: " + e.getMessage()));
             }
         });
-        */
 
-        /*
         // Endpoint que atualiza a senha do usuário
-        app.post("/senha/atualizar", ctx -> {
-            
+        app.post("/senha/atualizar/{nova-senha}", ctx -> {
+	    String email = ctx.bodyAsClass(Usuario.class).getEmail();
+            String novaSenha = ctx.pathParam("nova-senha");
+            try {
+                UsuarioRepository.alterarSenha(email, novaSenha);
+                ctx.status(201).json(Map.of("success", true));
+                System.out.println("Senha alterada com sucesso");
+            } catch(Exception e) {
+                ctx.status(500).json(Map.of("success", false));
+                System.out.println("Erro ao alterar senha no banco de dados: " + e.getMessage());
+            }
         });
-        */
         
         // Endpoint para logout do usuario 
         app.put("/logout", ctx -> {
