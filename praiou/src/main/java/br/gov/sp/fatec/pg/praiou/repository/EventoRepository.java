@@ -15,6 +15,7 @@ import br.gov.sp.fatec.pg.praiou.enums.TipoEvento;
 
 public class EventoRepository {
 
+    //Cria evento
     public static void CriarEvento(Evento evento) throws Exception{
             String sql =    "INSERT INTO evento (id_usuario, nm_evento, nm_tipo_evento, ds_evento, dt_evento, hr_evento, nm_endereco_evento, qt_limite_participantes)" +
                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
@@ -51,10 +52,22 @@ public class EventoRepository {
             pstmt.executeUpdate();
             System.out.println("Evento criado!");
         } catch (SQLException e) {
-            System.out.println("Erro ao enviar mensagem: " + e.getMessage());
+            System.out.println("Erro ao criar evento: " + e.getMessage());
         }
     }
 
+    //Deleta um evento a partir de um id
+    public static void DeletarEvento(int id) throws Exception {
+        String sql = "DELETE FROM evento WHERE id_evento = ?";
+        try (Connection conexao = MySQLConnection.conectar(); 
+            PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.execute();
+            System.out.println("Evento deletado");
+        } catch (SQLException e){
+            System.out.println("Erro ao deletar evento: " + e.getMessage());
+        }
+    }
 
     public static List<Evento> pegarTodosEventos() throws Exception {
         // Coleta todos os eventos do banco de dados

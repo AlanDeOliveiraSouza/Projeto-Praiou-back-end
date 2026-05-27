@@ -159,6 +159,17 @@ public class Main {
                 ctx.status(500).json(Map.of("success", false));
             }
         });
+
+        // Endpoint para deletar evento
+        app.delete("/api/eventos/{id}", ctx ->{
+            Integer id = Integer.parseInt(ctx.pathParam("id"));
+            EventoRepository.DeletarEvento(id);
+            try {
+                ctx.status(204).json(Map.of("id", id, "success", true));
+            } catch (Exception e){
+                ctx.status(500).json(Map.of("success", false));
+            }
+        });
         
         // Endpoint para listar todos os eventos de uma determinada categoria
         app.get("/api/eventos/type={categoria}", ctx -> {
