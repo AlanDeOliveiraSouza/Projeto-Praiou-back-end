@@ -15,8 +15,7 @@ import br.gov.sp.fatec.pg.praiou.model.Usuario;
 public class AmizadeRepository {
 
     public static void solicitarAmizade(int idSolicitante, int idRecebedor) throws Exception {
-       
-        String sql = "INSERT INTO amizade (id_usuario, id_usuario_recebedor_amizade, ic_status_pendente_aceito) VALUES (?, ?, 'PENDENTE');";
+        String sql = "INSERT INTO amizade (id_usuario, id_usuario_recebedor_amizade, dt_amizade, ic_status_pendente_aceito) VALUES (?, ?, ?, 'PENDENTE');";
 
         try (Connection conexao = MySQLConnection.conectar(); 
              PreparedStatement pstmt = conexao.prepareStatement(sql)) {
@@ -29,28 +28,29 @@ public class AmizadeRepository {
             System.out.println("Solicitação de amizade enviada com sucesso!");
         } catch (SQLException e) {
             System.out.println("Erro ao solicitar amizade: " + e.getMessage());
+            throw e; 
         }
     }
 
     public static void aceitarAmizade(int idSolicitante, int idRecebedor) throws Exception {
-
-        String sql = "UPDATE amizade SET ic_status_pendente_aceito = 'ACEITO' WHERE id_usuario = ? AND id_usuario_recebedor_amizade = ?;";
+        String sql = "UPDATE amizade SET ic_status_pendente_aceito = 'ACEITO', dt_amizade = ? WHERE id_usuario = ? AND id_usuario_recebedor_amizade = ?;";
 
         try (Connection conexao = MySQLConnection.conectar(); 
              PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             
-            pstmt.setInt(1, idSolicitante);
-            pstmt.setInt(2, idRecebedor);
+            pstmt.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+            pstmt.setInt(2, idSolicitante);
+            pstmt.setInt(3, idRecebedor);
 
             pstmt.executeUpdate();
             System.out.println("Amizade aceita com sucesso!");
         } catch (SQLException e) {
             System.out.println("Erro ao aceitar amizade: " + e.getMessage());
+            throw e;
         }
     }
 
     public static void removerAmizade(int idUsuario1, int idUsuario2) throws Exception {
-
         String sql = "DELETE FROM amizade WHERE (id_usuario = ? AND id_usuario_recebedor_amizade = ?) OR (id_usuario = ? AND id_usuario_recebedor_amizade = ?);";
 
         try (Connection conexao = MySQLConnection.conectar(); 
@@ -65,11 +65,11 @@ public class AmizadeRepository {
             System.out.println("Amizade removida com sucesso!");
         } catch (SQLException e) {
             System.out.println("Erro ao remover amizade: " + e.getMessage());
+            throw e;
         }
     }
 
     public static List<Amizade> listarAmigos(int idUsuario) throws Exception {
-       
         String sql = "SELECT id_usuario, id_usuario_recebedor_amizade, ic_status_pendente_aceito " +
                      "FROM amizade WHERE (id_usuario = ? OR id_usuario_recebedor_amizade = ?) " +
                      "AND ic_status_pendente_aceito = 'ACEITO';";
@@ -99,12 +99,14 @@ public class AmizadeRepository {
            
                 listaAmizades.add(amizade);
             }
+        } catch (SQLException e) {
+            System.out.println("Erro ao listar amigos: " + e.getMessage());
+            throw e;
         }
         return listaAmizades;
     }
     
     public static List<Amizade> listarSolicitacoesPendentes(int idUsuarioRecebedor) throws Exception {
-        
         String sql = "SELECT id_usuario, id_usuario_recebedor_amizade, ic_status_pendente_aceito " +
                      "FROM amizade WHERE id_usuario_recebedor_amizade = ? AND ic_status_pendente_aceito = 'PENDENTE';";
 
@@ -131,6 +133,9 @@ public class AmizadeRepository {
                 
                 listaPendentes.add(amizade);
             }
+        } catch (SQLException e) {
+            System.out.println("Erro ao listar solicitações pendentes: " + e.getMessage());
+            throw e;
         }
         return listaPendentes;
     }
