@@ -47,7 +47,7 @@ public class EmailService {
 
         switch(tipo) {
             case 1: 
-                conteudo = "Segue o código necesário para recuperação de sua senha: " + dado;
+                conteudo = "Segue o código necesário para recuperação de sua senha: " + dado + " Atenção, este código é válido por 15 minutos";
                 break;
             default: 
                 System.out.println("Tipo de e-mail inválido");

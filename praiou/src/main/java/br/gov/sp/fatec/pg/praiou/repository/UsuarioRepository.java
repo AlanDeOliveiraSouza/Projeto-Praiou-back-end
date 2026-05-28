@@ -226,7 +226,7 @@ public class UsuarioRepository {
 
                     LocalDateTime timestampAtual = LocalDateTime.now();
                     long tempoPassado = ChronoUnit.MINUTES.between(timestampBanco, timestampAtual);
-                    if(tempoPassado < 5) {
+                    if(tempoPassado < 15) {
                         // Se o timestamp do banco for de menos de cinco minutos (comparado à hora atual) ele aprova
                         resultado = true;
                     }
@@ -271,7 +271,7 @@ public class UsuarioRepository {
             if(rs.next()) {
 		if(BCrypt.checkpw(senhaAntiga, rs.getString("cd_senha"))) {
                     // Se a senha do banco for igual a senha antiga informada ele aprova a alteração
-                    alterarSenha(rs.geString("nm_email_usuario"), novaSenha);
+                    alterarSenha(rs.getString("nm_email_usuario"), novaSenha);
                     resultado = true;
                 }
             }

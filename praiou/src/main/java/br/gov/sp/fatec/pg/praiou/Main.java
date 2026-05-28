@@ -13,6 +13,8 @@ import br.gov.sp.fatec.pg.praiou.repository.MensagemRepository;
 import br.gov.sp.fatec.pg.praiou.service.EmailService;
 
 import io.javalin.Javalin;
+import io.javalin.http.staticfiles.Location;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -28,8 +30,24 @@ public class Main {
         // Serviço de envio de e-mails
         EmailService emailService = new EmailService();
 
+        // Chama o diretório de armazenameno de fotos
+        String diretorioFotos = System.getProperty("user.dir") + "-upload-fotos";
+
+        // Garante que a pasta exista
+        File pasta = new File(diretorioFotos);
+        if (!pasta.exists()) {
+            pasta.mkdirs();
+        }
+
         // Iniciando aplicação
-        Javalin app = Javalin.create().start(7070);
+        Javalin app = Javalin.create(config -> {
+            // Configura o Javalin para servir os arquivos dessa pasta na URL "/fotos"
+            config.staticFiles.add(staticFiles -> {
+                staticFiles.hostedPath = "/fotos";          // Caminho na URL
+                staticFiles.directory = diretorioFotos;     // Pasta no seu HD
+                staticFiles.location = Location.EXTERNAL;   // Fora do "resources" do projeto
+            });
+        }).start(7070);
 
         // --- ENDPOINTS:
 
