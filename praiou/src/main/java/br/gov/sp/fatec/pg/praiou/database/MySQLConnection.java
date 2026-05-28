@@ -59,12 +59,11 @@ public class MySQLConnection {
         // Script de criação da tabela AMIZADE
         String tabelaAmizade = 
         "CREATE TABLE IF NOT EXISTS amizade (" +
-            "id_amizade INT NOT NULL AUTO_INCREMENT," +
             "id_usuario INT NOT NULL, " +
             "id_usuario_recebedor_amizade INT NOT NULL," +
             "dt_amizade DATE NOT NULL," +            
             "ic_status_pendente_aceito ENUM('PENDENTE', 'ACEITO') NOT NULL," +
-            "PRIMARY KEY (id_amizade)," +             
+            "PRIMARY KEY (id_usuario, id_usuario_recebedor_amizade)," +             
             "CONSTRAINT fk_amizade_usuario1 FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario)," +
             "CONSTRAINT fk_amizade_usuario2 FOREIGN KEY (id_usuario_recebedor_amizade) REFERENCES usuario (id_usuario)" + 
         ");";
@@ -158,9 +157,12 @@ public class MySQLConnection {
         // Inserindo dados na tabela EVENTO
         String insercaoEvento = "INSERT IGNORE evento " + 
         "(id_evento, id_usuario, nm_evento, nm_tipo_evento, ds_evento, dt_evento, hr_evento, nm_endereco_evento, qt_limite_participantes) VALUES " + 
-        "(1, 2, 'Futebol na praia', 'FUTEBOL', 'Venham e se divirtam conosco!', '2026-04-24', '15:30:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6), " + 
-        "(1, 4, 'Futebol com novos colegas', 'FUTEBOL', 'Vamos aproveitar o fim de tarde', '2026-04-21', '16:00:00', 'Av Pres. Castelo Branco, 2762, Guilhermina - Praia Grande', 5)";
-        
+        "(1, 2, 'Futebol na praia', 'FUTEBOL', 'Venham e se divirtam conosco!', '2026-06-24', '15:30:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 10), " + 
+        "(2, 4, 'Futebol com novos colegas', 'FUTEBOL', 'Vamos aproveitar o fim de tarde', '2026-06-21', '16:00:00', 'Av Pres. Castelo Branco, 2762, Guilhermina - Praia Grande', 10)";
+        "(3, 3, 'Corrida na praia', 'CORRIDA', 'Venha participar de uma corrida nas praias de Praia Grande conosco!', '2026-06-28', '12:00:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6), " +
+        "(4, 2, 'Correndo por aí', 'CORRIDA', 'Venham e se divirtam conosco!', '2026-06-20', '09:00:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 4), " +        
+        "(5, 1, 'Volei na praia com amigos do Praiou', 'VOLEI', 'Venham e se divirtam conosco!', '2026-06-17', '15:00:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6), " +
+
         // Inserindo dados na tabela MENSAGEM
         String insercaoMensagem = 
         "INSERT IGNORE mensagem (id_usuario, id_evento, ds_mensagem) values " +
