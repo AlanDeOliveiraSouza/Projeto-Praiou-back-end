@@ -28,16 +28,14 @@ enviar Comentários nas postagens citadas; e possuir uma rede de Amizades. Um us
 
 Esta API foi desenvolvida em **Java** utilizando o framework **Javalin** para as rotas HTTP e **JDBC** para comunicação direta com o banco de dados MySQL.
 
-### 📋 Pré-requisitos
+-- Pré-requisitos
 
 Antes de começar, você vai precisar ter instalado em sua máquina:
 * **Java JDK 17** (ou superior)
 * **MySQL Server** (rodando localmente ou em container)
 * Uma IDE de sua preferência (VS Code, IntelliJ IDEA ou Eclipse) com suporte a projetos Maven.
 
----
-
-### 🔧 Passo a Passo para Execução 
+--- Psso a Passo para Execução 
 
 Se você estiver utilizando uma IDE como VS Code:
 
