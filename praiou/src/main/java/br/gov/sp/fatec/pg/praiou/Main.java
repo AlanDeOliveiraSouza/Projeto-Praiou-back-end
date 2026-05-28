@@ -533,23 +533,24 @@ public class Main {
                 String token = ctx.header("Authorization");
                 Usuario avaliador = UsuarioRepository.pegarUsuarioPorToken(token);
                 
-                // Recebe o corpo JSON enviado pelo front-end
                 Avaliacao avaliacaoReq = ctx.bodyAsClass(Avaliacao.class);
                 
-                // Validação para o usuário não se auto-avaliar nas partidas
+                // Pra não se auto-avaliar
                 if (avaliador.getId().equals(avaliacaoReq.getAvaliado().getId())) {
                     ctx.status(400).json(Map.of("success", false, "error", "Você não pode avaliar a si mesmo."));
                     return;
                 }
-
+				
                 AvaliacaoRepository.registrarAvaliacao(
                     avaliador.getId(), 
                     avaliacaoReq.getAvaliado().getId(), 
-                    avaliacaoReq.getIdEvento(),
+                    avaliacaoReq.getEvento().getId(), 
                     avaliacaoReq.isCurtida()
                 );
                 
                 ctx.status(201).json(Map.of("success", true, "message", "Avaliação registrada com sucesso!"));
+            } catch (NullPointerException e) {
+                ctx.status(400).json(Map.of("success", false, "error", "Dados insuficientes. Verifique se enviou avaliado.id e evento.id."));
             } catch (Exception e) {
                 ctx.status(500).json(Map.of("success", false, "error", e.getMessage()));
             }
