@@ -21,7 +21,7 @@ public class MySQLConnection {
             Connection c = DriverManager.getConnection(URL, "root", null); 
             Statement stmt = c.createStatement();
 
-            //stmt.execute("DROP DATABASE " + DBNAME);
+            stmt.execute("DROP DATABASE " + DBNAME);
 
             stmt.execute(criarBanco);
             System.out.println("Banco de Dados '" + DBNAME + "' criado/verificado com sucesso!");
@@ -155,13 +155,19 @@ public class MySQLConnection {
         // Todas as senhas são '123456'
     
         // Inserindo dados na tabela EVENTO
-        String insercaoEvento = "INSERT IGNORE evento " + 
-        "(id_evento, id_usuario, nm_evento, nm_tipo_evento, ds_evento, dt_evento, hr_evento, nm_endereco_evento, qt_limite_participantes) VALUES " + 
-        "(1, 2, 'Futebol na praia', 'FUTEBOL', 'Venham e se divirtam conosco!', '2026-06-24', '15:30:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 10), " + 
-        "(2, 4, 'Futebol com novos colegas', 'FUTEBOL', 'Vamos aproveitar o fim de tarde', '2026-06-21', '16:00:00', 'Av Pres. Castelo Branco, 2762, Guilhermina - Praia Grande', 10)";
+        String insercaoEvento = 
+        "INSERT IGNORE evento (id_evento, id_usuario, nm_evento, nm_tipo_evento, ds_evento, dt_evento, hr_evento, nm_endereco_evento, qt_limite_participantes) VALUES " +
+        "(1, 2, 'Futebol na praia', 'FUTEBOL', 'Venham e se divirtam conosco!', '2026-06-24', '15:30:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 10), " +
+        "(2, 4, 'Futebol com novos colegas', 'FUTEBOL', 'Vamos aproveitar o fim de tarde', '2026-06-21', '16:00:00', 'Av Pres. Castelo Branco, 2762, Guilhermina - Praia Grande', 10), " +
         "(3, 3, 'Corrida na praia', 'CORRIDA', 'Venha participar de uma corrida nas praias de Praia Grande conosco!', '2026-06-28', '12:00:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6), " +
-        "(4, 2, 'Correndo por aí', 'CORRIDA', 'Venham e se divirtam conosco!', '2026-06-20', '09:00:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 4), " +        
-        "(5, 1, 'Volei na praia com amigos do Praiou', 'VOLEI', 'Venham e se divirtam conosco!', '2026-06-17', '15:00:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6), " +
+        "(4, 2, 'Correndo por aí', 'CORRIDA', 'Venham e se divirtam conosco!', '2026-06-20', '09:00:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 4), " +
+        "(5, 1, 'Volei na praia com amigos do Praiou', 'VOLEI', 'Venham e se divirtam conosco!', '2026-06-17', '15:00:00', 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6);";
+     
+        // Inserindo dados na tabela POSTAGEM
+        String insercaoPostagem =
+        "INSERT IGNORE postagem (id_postagem, id_usuario, im_postagem, ds_postagem, dt_postagem) VALUES " + 
+        "(1, 1, NULL, 'Achei incrível a experiência no aplicativo Praiou', '2026-05-15 15:30:12'), " +
+        "(2, 3, NULL, 'Este aplicativo foi uma boa oportunidade para conhecer pessoas e criar relações!', '2026-05-19 11:45:28')";
 
         // Inserindo dados na tabela MENSAGEM
         String insercaoMensagem = 
@@ -187,6 +193,7 @@ public class MySQLConnection {
 
             stmt.execute(insercaoUsuario);
             stmt.execute(insercaoEvento);
+            stmt.execute(insercaoPostagem);
             //stmt.execute(insercaoMensagem);
             System.out.println("Dados inseridos nas tabelas com sucesso!");
             

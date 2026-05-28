@@ -1,39 +1,39 @@
 package br.gov.sp.fatec.pg.praiou.model;
 
-import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 import java.sql.Timestamp;
 
 public class Postagem{
     //Atributos da classe POSTAGEM
     private Integer idPostagem;
     private Integer idUsuario;
-    private BufferedImage imagem;
+    private String imagem;
     private String texto;
     private Timestamp data;
 
     //Construtores
     public Postagem(){}
-    public Postagem(Integer idPostagem, Integer idUsuario, BufferedImage imagem, String texto){
+    public Postagem(Integer idPostagem, Integer idUsuario, String imagem, String texto, Timestamp data){
         this.idPostagem = idPostagem;
         this.idUsuario = idUsuario;
         this.imagem = imagem;
         this.texto = texto;
-        this.data = new Timestamp(System.currentTimeMillis());
+        this.data = data;
     }
 
-    public Postagem(Integer idPostagem, Integer idUsuario, String texto){
+    public Postagem(Integer idPostagem, Integer idUsuario, String texto, Timestamp data){
         this.idPostagem = idPostagem;
         this.idUsuario = idUsuario;
         this.imagem = null;
         this.texto = texto;
-        this.data = new Timestamp(System.currentTimeMillis());
+        this.data = data;
     }
 
     //Getters e Setters
-    public Integer getidPostagem() {
+    public Integer getIdPostagem() {
         return idPostagem;
     }
-    public void setidPostagem(Integer idPostagem) {
+    public void setIdPostagem(Integer idPostagem) {
         this.idPostagem = idPostagem;
     }
     public Integer getIdUsuario() {
@@ -42,10 +42,10 @@ public class Postagem{
     public void setIdUsuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
     }
-    public BufferedImage getImagem() {
+    public String getImagem() {
         return imagem;
     }
-    public void setImagem(BufferedImage imagem) {
+    public void setImagem(String imagem) {
         this.imagem = imagem;
     }
     public String getTexto() {

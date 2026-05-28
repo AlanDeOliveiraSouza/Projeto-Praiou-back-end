@@ -16,7 +16,7 @@ import br.gov.sp.fatec.pg.praiou.enums.TipoEvento;
 public class EventoRepository {
 
     //Cria evento
-    public static void CriarEvento(Evento evento) throws Exception{
+    public static void criarEvento(Evento evento) throws Exception{
             String sql =    "INSERT INTO evento (id_usuario, nm_evento, nm_tipo_evento, ds_evento, dt_evento, hr_evento, nm_endereco_evento, qt_limite_participantes)" +
                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
@@ -57,7 +57,7 @@ public class EventoRepository {
     }
 
     //Deleta um evento a partir de um id
-    public static void DeletarEvento(int id) throws Exception {
+    public static void deletarEvento(int id) throws Exception {
         String sql = "DELETE FROM evento WHERE id_evento = ?";
         try (Connection conexao = MySQLConnection.conectar(); 
             PreparedStatement pstmt = conexao.prepareStatement(sql)) {

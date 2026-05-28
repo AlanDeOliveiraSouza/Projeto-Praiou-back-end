@@ -1,5 +1,8 @@
 package br.gov.sp.fatec.pg.praiou.model;
 
+import br.gov.sp.fatec.pg.praiou.model.Evento;
+import br.gov.sp.fatec.pg.praiou.model.Usuario;
+
 import java.time.LocalDate;
 
 public class Avaliacao { 
