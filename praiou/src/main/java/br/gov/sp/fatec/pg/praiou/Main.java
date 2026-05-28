@@ -525,6 +525,65 @@ public class Main {
             }
         });
 
+		//ENDPOINTS DE AVALIAÇÃO
+        // Endpoint para registrar uma nova avaliação (Like/Dislike)
+        // POST /api/avaliar
+        app.post("/api/avaliar", ctx -> {
+            try {
+                String token = ctx.header("Authorization");
+                Usuario avaliador = UsuarioRepository.pegarUsuarioPorToken(token);
+                
+                // Recebe o corpo JSON enviado pelo front-end
+                Avaliacao avaliacaoReq = ctx.bodyAsClass(Avaliacao.class);
+                
+                // Validação para o usuário não se auto-avaliar nas partidas
+                if (avaliador.getId().equals(avaliacaoReq.getAvaliado().getId())) {
+                    ctx.status(400).json(Map.of("success", false, "error", "Você não pode avaliar a si mesmo."));
+                    return;
+                }
+
+                AvaliacaoRepository.registrarAvaliacao(
+                    avaliador.getId(), 
+                    avaliacaoReq.getAvaliado().getId(), 
+                    avaliacaoReq.getIdEvento(),
+                    avaliacaoReq.isCurtida()
+                );
+                
+                ctx.status(201).json(Map.of("success", true, "message", "Avaliação registrada com sucesso!"));
+            } catch (Exception e) {
+                ctx.status(500).json(Map.of("success", false, "error", e.getMessage()));
+            }
+        });
+
+        // Endpoint para buscar todas as avaliações que o usuário logado recebeu
+        // GET /api/avaliacoes/recebidas
+        app.get("/api/avaliacoes/recebidas", ctx -> {
+            try {
+                String token = ctx.header("Authorization");
+                Usuario usuarioLogado = UsuarioRepository.pegarUsuarioPorToken(token);
+
+                List<Avaliacao> avaliacoes = AvaliacaoRepository.buscarAvaliacoesRecebidas(usuarioLogado.getId());
+                ctx.status(200).json(Map.of("avaliacoes", avaliacoes, "success", true));
+            } catch (Exception e) {
+                ctx.status(500).json(Map.of("success", false, "error", e.getMessage()));
+            }
+        });
+
+        // Endpoint para contar o número total de 'Likes' recebidos por um usuário específico
+        // GET /api/avaliacoes/likes?idUsuario=3
+        app.get("/api/avaliacoes/likes", ctx -> {
+            try {
+                int idUsuario = Integer.parseInt(ctx.queryParam("idUsuario"));
+                int totalLikes = AvaliacaoRepository.contarTotalLikes(idUsuario);
+                
+                ctx.status(200).json(Map.of("totalLikes", totalLikes, "success", true));
+            } catch (NumberFormatException e) {
+                ctx.status(400).json(Map.of("success", false, "error", "ID de usuário inválido."));
+            } catch (Exception e) {
+                ctx.status(500).json(Map.of("success", false, "error", e.getMessage()));
+            }
+        });
+
     }
 
 }
