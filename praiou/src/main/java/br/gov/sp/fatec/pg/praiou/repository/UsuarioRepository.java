@@ -256,4 +256,29 @@ public class UsuarioRepository {
         }
     }
 
+    public static boolean editarSenha(String token, String senhaAntiga, String novaSenha) throws Exception {
+        // Edita a senha do usuario no banco de dados
+
+        boolean resultado = false;
+
+        String sql = "SELECT nm_email_usuario, cd_senha FROM usuario WHERE cd_token = ?";
+
+        try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
+            pstmt.setString(1, token);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()) {
+		if(BCrypt.checkpw(senhaAntiga, rs.getString("cd_senha"))) {
+                    // Se a senha do banco for igual a senha antiga informada ele aprova a alteração
+                    alterarSenha(rs.geString("nm_email_usuario"), novaSenha);
+                    resultado = true;
+                }
+            }
+        } catch(SQLException e) {
+            System.out.println("Erro ao editar senha: " + e.getMessage());
+        }
+        return resultado;
+    }
+
 }

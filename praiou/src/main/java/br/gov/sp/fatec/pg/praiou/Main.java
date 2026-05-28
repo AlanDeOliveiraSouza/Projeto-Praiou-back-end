@@ -130,9 +130,9 @@ public class Main {
         });
 
         // Endpoint que atualiza a senha do usuário
-        app.post("/senha/atualizar/{nova-senha}", ctx -> {
+        app.post("/senha/atualizar", ctx -> {
 	    String email = ctx.bodyAsClass(Usuario.class).getEmail();
-            String novaSenha = ctx.pathParam("nova-senha");
+            String novaSenha = ctx.formParam("novaSenha");
             try {
                 UsuarioRepository.alterarSenha(email, novaSenha);
                 ctx.status(201).json(Map.of("success", true));
@@ -142,7 +142,7 @@ public class Main {
                 System.out.println("Erro ao alterar senha no banco de dados: " + e.getMessage());
             }
         });
-        
+
         // Endpoint para logout do usuario 
         app.put("/logout", ctx -> {
             try {
@@ -303,7 +303,6 @@ public class Main {
         });
 
 
-
         // --- ENDPOINTS DAS MENSAGENS ---
         // Endpoint para busca de todas as mensagens de um evento
         app.get("/api/eventos/{id}/msgs", ctx ->{
@@ -372,7 +371,9 @@ public class Main {
             }
         });
 
+
         // --- ENDPOINTS PERFIL
+        // Endpoint que retorna os dados do perfil do usuário
         app.get("api/perfil", ctx -> {
             String token = ctx.header("Authorization");
             try {
@@ -385,6 +386,23 @@ public class Main {
             } catch(Exception e) {
                 ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar usuário no banco de dados: " + e.getMessage());
+            }
+        });
+
+        // Endpoint que faz a edição da senha
+        app.put("api/perfil/editar-senha", ctx -> {
+            String token = ctx.header("Authorization");
+            String senhaAntiga = ctx.formParam("senhaAntiga");
+            String novaSenha = ctx.formParam("novaSenha");
+            try {
+                if(UsuarioRepository.editarSenha(token, senhaAntiga, novaSenha)) {
+                    ctx.status(204).json(Map.of("success", true));
+                } else { 
+                    ctx.status(500).json(Map.of("success", false)); 
+                }
+            } catch(Exception e) {
+                ctx.status(500).json(Map.of("success", false));
+                System.out.println("Erro ao editar senha do usuário: " + e.getMessage());
             }
         });
 
