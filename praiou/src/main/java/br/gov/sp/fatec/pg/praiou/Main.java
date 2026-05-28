@@ -389,6 +389,95 @@ public class Main {
             }
         });
 
+		//ENDPOINTS DE AMIZADE 
+        // Endpoint para enviar uma solicitação de amizade
+        // POST /api/amizades/solicitar?idRecebedor=2
+        app.post("/api/amizades/solicitar", ctx -> {
+            try {
+                String token = ctx.header("Authorization");
+                // Busca o usuário 
+                Usuario solicitante = UsuarioRepository.pegarUsuarioPorToken(token);
+                Integer idRecebedor = Integer.parseInt(ctx.queryParam("idRecebedor"));
+
+                // Validação simples para o usuário não se auto-adicionar
+                if (solicitante.getId().equals(idRecebedor)) {
+                    ctx.status(400).json(Map.of("success", false, "error", "Você não pode enviar uma solicitação para si mesmo."));
+                    return;
+                }
+
+                AmizadeRepository.solicitarAmizade(solicitante.getId(), idRecebedor);
+                ctx.status(201).json(Map.of("success", true, "message", "Solicitação de amizade enviada!"));
+            } catch (NumberFormatException e) {
+                ctx.status(400).json(Map.of("success", false, "error", "ID do recebedor inválido."));
+            } catch (Exception e) {
+                ctx.status(500).json(Map.of("success", false, "error", e.getMessage()));
+            }
+        });
+
+        // Endpoint para aceitar uma solicitação de amizade
+        // PUT /api/amizades/aceitar?idSolicitante=1
+        app.put("/api/amizades/aceitar", ctx -> {
+            try {
+                String token = ctx.header("Authorization");
+                // Quem está aceitando é o usuário dono do token (o recebedor da solicitação)
+                Usuario recebedor = UsuarioRepository.pegarUsuarioPorToken(token);
+                Integer idSolicitante = Integer.parseInt(ctx.queryParam("idSolicitante"));
+
+                AmizadeRepository.aceitarAmizade(idSolicitante, recebedor.getId());
+                ctx.status(200).json(Map.of("success", true, "message", "Solicitação de amizade aceita!"));
+            } catch (NumberFormatException e) {
+                ctx.status(400).json(Map.of("success", false, "error", "ID do solicitante inválido."));
+            } catch (Exception e) {
+                ctx.status(500).json(Map.of("success", false, "error", e.getMessage()));
+            }
+        });
+
+        // Endpoint para recusar solicitação ou desfazer uma amizade existente
+        // DELETE /api/amizades/remover?idUsuario2=2
+        app.delete("/api/amizades/remover", ctx -> {
+            try {
+                String token = ctx.header("Authorization");
+                Usuario usuarioLogado = UsuarioRepository.pegarUsuarioPorToken(token);
+                Integer idUsuario2 = Integer.parseInt(ctx.queryParam("idUsuario2"));
+
+                AmizadeRepository.removerAmizade(usuarioLogado.getId(), idUsuario2);
+                ctx.status(204); 
+            } catch (NumberFormatException e) {
+                ctx.status(400).json(Map.of("success", false, "error", "ID de usuário inválido."));
+            } catch (Exception e) {
+                ctx.status(500).json(Map.of("success", false, "error", e.getMessage()));
+            }
+        });
+
+        // Endpoint para listar os amigos aceitos do usuário logado
+        // GET /api/amizades/listar
+        app.get("/api/amizades/listar", ctx -> {
+            try {
+                String token = ctx.header("Authorization");
+                Usuario usuarioLogado = UsuarioRepository.pegarUsuarioPorToken(token);
+
+                List<Amizade> amigos = AmizadeRepository.listarAmigos(usuarioLogado.getId());
+                ctx.status(200).json(Map.of("amigos", amigos, "success", true));
+            } catch (Exception e) {
+                ctx.status(500).json(Map.of("success", false, "error", e.getMessage()));
+            }
+        });
+
+        // Endpoint para listar as solicitações pendentes que o usuário logado RECEBEU
+        // GET /api/amizades/pendentes
+        app.get("/api/amizades/pendentes", ctx -> {
+            try {
+                String token = ctx.header("Authorization");
+                Usuario usuarioLogado = UsuarioRepository.pegarUsuarioPorToken(token);
+
+                List<Amizade> pendentes = AmizadeRepository.listarSolicitacoesPendentes(usuarioLogado.getId());
+                ctx.status(200).json(Map.of("pendentes", pendentes, "success", true));
+            } catch (Exception e) {
+                ctx.status(500).json(Map.of("success", false, "error", e.getMessage()));
+            }
+        });
+
+
 
         // --- ENDPOINTS PERFIL
         // Endpoint que retorna os dados do perfil do usuário
