@@ -127,12 +127,12 @@ public class AtletaRepository {
         return atletas;
     }
 
-    public static void alterarBio(Integer id, String bio) throws Exception {
-        String sql = "UPDATE usuario SET ds_bio = ? WHERE id_usuario = ?";
+    public static void alterarBio(String token, String bio) throws Exception {
+        String sql = "UPDATE usuario SET ds_bio = ? WHERE cd_token = ?";
 
         try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
             pstmt.setString(1, bio);
-            pstmt.setInt(2, id);
+            pstmt.setString(2, token);
 
             pstmt.executeUpdate();
         } catch(SQLException e) {
@@ -140,12 +140,12 @@ public class AtletaRepository {
         }
     }
 
-    public static void alterarFotoPerfil(Integer id, String fotoPerfil) throws Exception {
-        String sql = "UPDATE usuario SET im_perfil = ? WHERE id_usuario = ?";
+    public static void alterarFotoPerfil(String token, String fotoPerfil) throws Exception {
+        String sql = "UPDATE usuario SET im_perfil = ? WHERE cd_token = ?";
 
         try(Connection conexao = MySQLConnection.conectar(); PreparedStatement pstmt = conexao.prepareStatement(sql);) {
             pstmt.setString(1, fotoPerfil);
-            pstmt.setInt(2, id);
+            pstmt.setString(2, token);
 
             pstmt.executeUpdate();
         } catch(SQLException e) {

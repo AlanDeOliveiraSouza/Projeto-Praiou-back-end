@@ -332,7 +332,7 @@ public class Main {
         app.get("api/posts", ctx -> {
             try{
                 List<Postagem> postagens = PostagemRepository.getTodasPostagens();
-                ctx.status(200).json(Map.of("postagens", postagens));
+                ctx.status(200).json(Map.of("postagens", postagens, "success", true));
             } catch(Exception e){
                 ctx.status(500).json(Map.of("success",false));
                 System.out.println("Erro ao buscar postagens no banco de dados: " + e.getMessage());
@@ -512,6 +512,32 @@ public class Main {
             } catch(Exception e) {
                 ctx.status(500).json(Map.of("success", false));
                 System.out.println("Erro ao buscar usuário no banco de dados: " + e.getMessage());
+            }
+        });
+
+        // Endpoint que edita a bio o usuário
+        app.put("api/perfil/editar-bio", ctx -> {
+            String token = ctx.header("Authorization");
+            try{
+                String bio = ctx.bodyAsClass(Atleta.class).getBio();
+                AtletaRepository.alterarBio(token, bio);
+                ctx.status(204).json(Map.of("success", true));
+            } catch(Exception e){
+                ctx.status(500).json(Map.of("success",false));
+                System.out.println("Erro ao editar bio do usuário no banco de dados: " + e.getMessage());
+            }
+        });
+
+        // Endpoint que edita a foto do usuario
+        app.put("api/perfil/editar-foto", ctx -> {
+            String token = ctx.header("Authorization");
+            try{
+                String foto = ctx.bodyAsClass(Atleta.class).getFotoPerfil();
+                AtletaRepository.alterarFotoPerfil(token, foto);
+                ctx.status(204).json(Map.of("success", true));
+            } catch(Exception e){
+                ctx.status(500).json(Map.of("success",false));
+                System.out.println("Erro ao editar foto de perfil do usuário no banco de dados: " + e.getMessage());
             }
         });
 
