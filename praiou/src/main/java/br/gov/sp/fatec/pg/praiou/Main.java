@@ -576,20 +576,20 @@ public class Main {
         app.post("/api/avaliar", ctx -> {
             try {
                 String token = ctx.header("Authorization");
-                Usuario avaliador = UsuarioRepository.pegarUsuarioPorToken(token);
+                Integer idUsuario = UsuarioRepository.pegarUsuarioPorToken(token).getId();
                 
                 Avaliacao avaliacaoReq = ctx.bodyAsClass(Avaliacao.class);
                 
                 // Pra não se auto-avaliar
-                if (avaliador.getId().equals(avaliacaoReq.getAvaliado().getId())) {
+                if (idUsuario.equals(avaliacaoReq.getIdUsuarioAvaliado())) {
                     ctx.status(400).json(Map.of("success", false, "error", "Você não pode avaliar a si mesmo."));
                     return;
                 }
 				
                 AvaliacaoRepository.registrarAvaliacao(
-                    avaliador.getId(), 
-                    avaliacaoReq.getAvaliado().getId(), 
-                    avaliacaoReq.getEvento().getIdEvento(), 
+                    idUsuario, 
+                    avaliacaoReq.getIdUsuarioAvaliado(), 
+                    avaliacaoReq.getIdEvento(), 
                     avaliacaoReq.isCurtida()
                 );
                 

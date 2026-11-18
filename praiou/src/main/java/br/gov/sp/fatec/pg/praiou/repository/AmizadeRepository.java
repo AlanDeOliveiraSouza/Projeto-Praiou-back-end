@@ -10,7 +10,6 @@ import java.time.LocalDate;
 
 import br.gov.sp.fatec.pg.praiou.database.MySQLConnection;
 import br.gov.sp.fatec.pg.praiou.model.Amizade;
-import br.gov.sp.fatec.pg.praiou.model.Usuario;
 
 public class AmizadeRepository {
 
@@ -86,15 +85,9 @@ public class AmizadeRepository {
 
             while (rs.next()) {
                 Amizade amizade = new Amizade();
-            
-                Usuario solicitante = new Usuario() {}; 
-                solicitante.setId(rs.getInt("id_usuario"));
-                
-                Usuario recebedor = new Usuario() {};
-                recebedor.setId(rs.getInt("id_usuario_recebedor_amizade"));
-                
-                amizade.setUsuarioSolicitante(solicitante);
-                amizade.setUsuarioAmigo(recebedor);
+
+                amizade.setIdUsuarioSolicitante(rs.getInt("id_usuario"));
+                amizade.setIdUsuarioRecebedor(rs.getInt("id_usuario_recebedor_amizade"));
                 amizade.setStatus(rs.getString("ic_status_pendente_aceito"));
            
                 listaAmizades.add(amizade);
@@ -121,14 +114,8 @@ public class AmizadeRepository {
             while (rs.next()) {
                 Amizade amizade = new Amizade();
                 
-                Usuario solicitante = new Usuario() {};
-                solicitante.setId(rs.getInt("id_usuario"));
-                
-                Usuario recebedor = new Usuario() {};
-                recebedor.setId(rs.getInt("id_usuario_recebedor_amizade"));
-                
-                amizade.setUsuarioSolicitante(solicitante);
-                amizade.setUsuarioAmigo(recebedor);
+                amizade.setIdUsuarioSolicitante(rs.getInt("id_usuario"));
+                amizade.setIdUsuarioRecebedor(rs.getInt("id_usuario_recebedor_amizade"));
                 amizade.setStatus(rs.getString("ic_status_pendente_aceito"));
                 
                 listaPendentes.add(amizade);

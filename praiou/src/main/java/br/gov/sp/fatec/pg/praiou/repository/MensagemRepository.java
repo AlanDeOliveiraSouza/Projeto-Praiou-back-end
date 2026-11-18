@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.gov.sp.fatec.pg.praiou.database.MySQLConnection;
-import br.gov.sp.fatec.pg.praiou.model.Atleta;
-import br.gov.sp.fatec.pg.praiou.model.Evento;
 import br.gov.sp.fatec.pg.praiou.model.Mensagem;
-import br.gov.sp.fatec.pg.praiou.model.Usuario;
 
 public class MensagemRepository {
 
@@ -51,12 +48,8 @@ public class MensagemRepository {
                 m.setIdEvento(idEvento);
                 m.setConteudo(rs.getString("ds_mensagem"));
                 System.out.println(rs.getInt("id_usuario") + " - " + m.getConteudo());
-                m.setDataEnvio(rs.getTimestamp("dt_mensagem").toLocalDateTime().toLocalDate());
+                m.setData(rs.getTimestamp("dt_mensagem").toLocalDateTime().toLocalDate());
                 m.setDataEdicao(rs.getTimestamp("dt_edicao_mensagem").toLocalDateTime().toLocalDate());
-
-                // Usuario remetente = new Atleta(); 
-                // remetente.setId(rs.getInt("id_usuario"));
-                // m.setRemetente(remetente);
 
                 chat.add(m);
             }

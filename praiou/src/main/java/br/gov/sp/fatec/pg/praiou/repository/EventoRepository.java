@@ -24,9 +24,7 @@ public class EventoRepository {
              PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             
             pstmt.setInt(1, evento.getIdUsuario());
-
             pstmt.setString(2, evento.getNome());
-
             pstmt.setString(3, evento.getTipoEvento().toString());
 
             if      (evento.getDescricao() != null)
@@ -81,7 +79,7 @@ public class EventoRepository {
             while(rs.next()) {
                 // É declarada uma nova instância de evento
                 Evento ev = new Evento();
-                ev.setIdEvento(rs.getInt("id_evento"));
+                ev.setId(rs.getInt("id_evento"));
                 ev.setIdUsuario(rs.getInt("id_usuario"));
                 ev.setNome(rs.getString("nm_evento"));
                 ev.setDescricao(rs.getString("ds_evento"));
@@ -112,7 +110,7 @@ public class EventoRepository {
             while(rs.next()) {   
                 // É declarada uma nova instância de evento      
                 Evento ev = new Evento();       
-                ev.setIdEvento(rs.getInt("id_evento"));
+                ev.setId(rs.getInt("id_evento"));
                 ev.setIdUsuario(rs.getInt("id_usuario"));
                 ev.setNome(rs.getString("nm_evento"));
                 ev.setDescricao(rs.getString("ds_evento"));
@@ -144,7 +142,7 @@ public class EventoRepository {
             while(rs.next()) {   
                 // É declarada uma nova instância de evento      
                 Evento ev = new Evento();       
-                ev.setIdEvento(rs.getInt("id_evento"));
+                ev.setId(rs.getInt("id_evento"));
                 ev.setIdUsuario(rs.getInt("id_usuario"));
                 ev.setNome(rs.getString("nm_evento"));
                 ev.setDescricao(rs.getString("ds_evento"));
@@ -177,7 +175,7 @@ public class EventoRepository {
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()) {
 
-                evento.setIdEvento(rs.getInt("id_evento"));
+                evento.setId(rs.getInt("id_evento"));
                 evento.setIdUsuario(rs.getInt("id_usuario"));
                 evento.setNome(rs.getString("nm_evento"));
                 evento.setDescricao(rs.getString("ds_evento"));
@@ -211,7 +209,7 @@ public class EventoRepository {
         }
     }
     */
-   public static List<Evento> pegarEventosDoCriador(String token) throws Exception {
+    public static List<Evento> pegarEventosDoCriador(String token) throws Exception {
         // Pega todos os evento do banco de dados que um usuario criou
         
         String sql = "SELECT * FROM evento e NATURAL JOIN usuario u WHERE u.cd_token = ?";
@@ -224,7 +222,7 @@ public class EventoRepository {
             while(rs.next()) {   
                 // É declarada uma nova instância de evento      
                 Evento ev = new Evento();       
-                ev.setIdEvento(rs.getInt("id_evento"));
+                ev.setId(rs.getInt("id_evento"));
                 ev.setIdUsuario(rs.getInt("id_usuario"));
                 ev.setNome(rs.getString("nm_evento"));
                 ev.setDescricao(rs.getString("ds_evento"));
@@ -258,7 +256,7 @@ public class EventoRepository {
             while(rs.next()) {   
                 // É declarada uma nova instância de evento      
                 Evento ev = new Evento();       
-                ev.setIdEvento(rs.getInt("id_evento"));             //System.out.println(ev.getIdEvento());
+                ev.setId(rs.getInt("id_evento"));             //System.out.println(ev.getIdEvento());
                 ev.setIdUsuario(rs.getInt("id_usuario"));
                 ev.setNome(rs.getString("nm_evento"));
                 ev.setDescricao(rs.getString("ds_evento"));

@@ -28,7 +28,7 @@ public class PostagemRepository {
 
             while(rs.next()) {
                 Postagem post = new Postagem();
-                post.setIdPostagem(rs.getInt("id_postagem"));
+                post.setId(rs.getInt("id_postagem"));
                 post.setIdUsuario(rs.getInt("id_usuario"));
                 post.setTexto(rs.getString("ds_postagem"));
                 post.setData(Timestamp.valueOf(LocalDateTime.parse(rs.getString("dt_postagem"), formatador)));
@@ -38,6 +38,8 @@ public class PostagemRepository {
 
                 postagens.add(post);
             }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar postagens: " + e.getMessage());
         }
         return postagens;
     }

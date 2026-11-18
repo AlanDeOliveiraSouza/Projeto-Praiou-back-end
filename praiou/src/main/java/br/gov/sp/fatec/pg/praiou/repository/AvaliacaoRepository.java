@@ -4,14 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Date;
 
 import br.gov.sp.fatec.pg.praiou.database.MySQLConnection;
 import br.gov.sp.fatec.pg.praiou.model.Avaliacao;
-import br.gov.sp.fatec.pg.praiou.model.Usuario;
-import br.gov.sp.fatec.pg.praiou.model.Atleta; // So por preulcação(vai ser necessario?)
+
 public class AvaliacaoRepository {
 
     
@@ -25,7 +25,7 @@ public class AvaliacaoRepository {
             pstmt.setInt(2, idAvaliado);
             pstmt.setInt(3, idEvento);
             pstmt.setBoolean(4, curtida);
-            pstmt.setDate(5, Date.valueOf(java.time.LocalDate.now()));
+            pstmt.setDate(5, Date.valueOf(LocalDate.now()));
 
             pstmt.executeUpdate();
             System.out.println("Avaliação salva com sucesso!");
@@ -36,7 +36,7 @@ public class AvaliacaoRepository {
 
     
     public static List<Avaliacao> buscarAvaliacoesRecebidas(int idUsuarioAvaliado) throws Exception {
-        String sql = "SELECT id_avaliacao, id_usuario_avaliador, ic_like_dislike_avaliacao, dt_avaliacao FROM avaliacao WHERE id_usuario_avaliado = ?;";
+        String sql = "SELECT id_usuario_avaliador, ic_like_dislike_avaliacao, dt_avaliacao FROM avaliacao WHERE id_usuario_avaliado = ?;";
         List<Avaliacao> lista = new ArrayList<>();
 
         try (Connection conexao = MySQLConnection.conectar(); 
@@ -47,14 +47,10 @@ public class AvaliacaoRepository {
 
             while (rs.next()) {
                 Avaliacao a = new Avaliacao();
-                a.setId(rs.getInt("id_avaliacao"));
+
                 a.setCurtida(rs.getBoolean("ic_like_dislike_avaliacao"));
                 a.setDataAvaliacao(rs.getDate("dt_avaliacao").toLocalDate());
-
-                
-                Usuario avaliador = new Atleta(); 
-                avaliador.setId(rs.getInt("id_usuario_avaliador"));
-                a.setAvaliador(avaliador);
+                a.setIdUsuarioAvaliador(rs.getInt("id_usuario_avaliador"));
 
                 lista.add(a);
             }

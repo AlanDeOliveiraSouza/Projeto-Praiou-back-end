@@ -5,8 +5,8 @@ import java.time.LocalDate;
 public class Amizade {
 
     private Integer id;
-    private Usuario usuarioSolicitante;
-    private Usuario usuarioAmigo;
+    private Integer idUsuarioSolicitante;
+    private Integer idUsuarioRecebedor;
     private LocalDate dataAmizade;
     private String status; 
  
@@ -14,18 +14,18 @@ public class Amizade {
     public Amizade() {}
 
     // Construtor básico para criar solicitação
-    public Amizade(Usuario usuarioSolicitante, Usuario usuarioAmigo, String status) {
-        this.usuarioSolicitante = usuarioSolicitante;
-        this.usuarioAmigo = usuarioAmigo;
+    public Amizade(Integer idUsuarioSolicitante, Integer idUsuarioRecebedor, String status) {
+        this.idUsuarioSolicitante = idUsuarioSolicitante;
+        this.idUsuarioRecebedor = idUsuarioRecebedor;
         this.status = status;
         this.dataAmizade = LocalDate.now(); 
     }
 
     // Construtor completo
-    public Amizade(Integer id, Usuario usuarioSolicitante, Usuario usuarioAmigo, LocalDate dataAmizade, String status) {
+    public Amizade(Integer id, Integer idUsuarioSolicitante, Integer idUsuarioRecebedor, LocalDate dataAmizade, String status) {
         this.id = id;
-        this.usuarioSolicitante = usuarioSolicitante;
-        this.usuarioAmigo = usuarioAmigo;
+        this.idUsuarioSolicitante = idUsuarioSolicitante;
+        this.idUsuarioRecebedor = idUsuarioRecebedor;
         this.dataAmizade = dataAmizade;
         this.status = status;
     }
@@ -39,20 +39,20 @@ public class Amizade {
         this.id = id;
     }
 
-    public Usuario getUsuarioSolicitante() {
-        return usuarioSolicitante;
+    public Integer getIdUsuarioSolicitante() {
+        return idUsuarioSolicitante;
     }
 
-    public void setUsuarioSolicitante(Usuario usuarioSolicitante) {
-        this.usuarioSolicitante = usuarioSolicitante;
+    public void setIdUsuarioSolicitante(Integer idUsuarioSolicitante) {
+        this.idUsuarioSolicitante = idUsuarioSolicitante;
     }
 
-    public Usuario getUsuarioAmigo() {
-        return usuarioAmigo;
+    public Integer getUsuarioRecebedor() {
+        return idUsuarioRecebedor;
     }
 
-    public void setUsuarioAmigo(Usuario usuarioAmigo) {
-        this.usuarioAmigo = usuarioAmigo;
+    public void setIdUsuarioRecebedor(Integer idUsuarioRecebedor) {
+        this.idUsuarioRecebedor = idUsuarioRecebedor;
     }
 
     public LocalDate getDataAmizade() {

@@ -1,28 +1,28 @@
 package br.gov.sp.fatec.pg.praiou.model;
 
-//import java.awt.image.BufferedImage;
 import java.sql.Timestamp;
 
 public class Postagem{
     //Atributos da classe POSTAGEM
-    private Integer idPostagem;
+    private Integer id;
     private Integer idUsuario;
-    private String imagem;
+    private String imagem; // Armazena o caminho da imagem no servidor
     private String texto;
     private Timestamp data;
 
     //Construtores
-    public Postagem(){}
-    public Postagem(Integer idPostagem, Integer idUsuario, String imagem, String texto, Timestamp data){
-        this.idPostagem = idPostagem;
+    public Postagem() {}
+
+    public Postagem(Integer id, Integer idUsuario, String imagem, String texto, Timestamp data){
+        this.id = id;
         this.idUsuario = idUsuario;
         this.imagem = imagem;
         this.texto = texto;
         this.data = data;
     }
 
-    public Postagem(Integer idPostagem, Integer idUsuario, String texto, Timestamp data){
-        this.idPostagem = idPostagem;
+    public Postagem(Integer id, Integer idUsuario, String texto, Timestamp data){
+        this.id = id;
         this.idUsuario = idUsuario;
         this.imagem = null;
         this.texto = texto;
@@ -30,11 +30,11 @@ public class Postagem{
     }
 
     //Getters e Setters
-    public Integer getIdPostagem() {
-        return idPostagem;
+    public Integer getId() {
+        return id;
     }
-    public void setIdPostagem(Integer idPostagem) {
-        this.idPostagem = idPostagem;
+    public void setId(Integer id) {
+        this.id = id;
     }
     public Integer getIdUsuario() {
         return idUsuario;
@@ -61,16 +61,4 @@ public class Postagem{
         this.data = data;
     }
 
-    //para testes
-    /*
-    @Override
-    public String toString(){
-        return idPostagem + ", " + idUsuario + ", " + texto + ", " + data.toString();
-    }
-
-    public static void main(String[] args) {
-        Postagem post = new Postagem(1, 1, "Texto da postagem");
-        System.out.println(post.toString());
-    }
-    */
 }

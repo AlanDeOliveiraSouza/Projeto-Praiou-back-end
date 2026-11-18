@@ -7,7 +7,7 @@ import br.gov.sp.fatec.pg.praiou.enums.TipoEvento;
 
 public class Evento{
     //Atributos da classe EVENTO
-    private Integer idEvento;
+    private Integer id;
     private Integer idUsuario;
     private String nome;
     private String descricao;
@@ -22,7 +22,7 @@ public class Evento{
     public Evento(){}
     
     public Evento(Integer idEvento, Integer idUsuario, String nome, String descricao, String endereco, TipoEvento tipoEvento, LocalDate data, LocalTime horario, Integer limiteParticipantes){
-        this.idEvento = idEvento;
+        this.id = idEvento;
         this.idUsuario = idUsuario;
         this.nome = nome;
         this.descricao = descricao;
@@ -35,11 +35,11 @@ public class Evento{
     }
 
     //Getters e Setters
-    public Integer getIdEvento() {
-        return idEvento;
+    public Integer getId() {
+        return id;
     }
-    public void setIdEvento(Integer idEvento) {
-        this.idEvento = idEvento;
+    public void setId(Integer idEvento) {
+        this.id = idEvento;
     }
     public Integer getIdUsuario() {
         return idUsuario;
@@ -96,25 +96,4 @@ public class Evento{
         this.limiteParticipantes = limiteParticipantes;
     }
 
-    // para testes
-    /* 
-    @Override
-    public String toString(){
-        return  idEvento + ", " +
-                idUsuario + ", " +
-                nome + ", " +
-                descricao + ", " +
-                endereco + ", " +
-                tipoEvento + ", " +
-                data.toString() + ", " +
-                dataPublicacao.toString() + ", " +
-                horario.toString() + ", " +
-                limiteParticipantes;    
-    }    
-    
-    public static void main(String[] args){
-        Evento evento = new Evento(1, 1, "Nome do evento", "Descrição", "Endereço", TipoEvento.Surf, LocalDate.of(2026,05,15), LocalTime.of(16,0), 10);
-        System.out.println(evento.toString());
-    }
-    */
 }

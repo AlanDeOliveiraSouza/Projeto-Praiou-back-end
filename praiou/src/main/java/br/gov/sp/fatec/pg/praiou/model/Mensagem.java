@@ -7,34 +7,28 @@ public class Mensagem {
     private Integer id;
     private Integer idRemetente;
     private Integer idEvento;
-    //private Usuario remetente;
-    //private Evento evento; 
     private String conteudo; 
-    private LocalDate dataEnvio;
+    private LocalDate data;
     private LocalDate dataEdicao;    
 
     // Construtor vazio
     public Mensagem() {}
 
     // Construtor básico de envio
-    public Mensagem(/*Usuario remetente, Evento evento,*/ Integer idRemetente, Integer idEvento, String conteudo) {
-        //this.remetente = remetente;
-        //this.evento = evento;        
+    public Mensagem(Integer idRemetente, Integer idEvento, String conteudo) {
         this.idRemetente = idRemetente;
         this.idEvento = idEvento;
         this.conteudo = conteudo;
-        this.dataEnvio = LocalDate.now();
+        this.data = LocalDate.now();
     }
 
     // Construtor completo
-    public Mensagem(/*Usuario remetente, Evento evento,*/ Integer id, Integer idRemetente, Integer idEvento, String conteudo, LocalDate dataEnvio, LocalDate dataEdicao) {
-        //this.remetente = remetente;
-        //this.evento = evento;
+    public Mensagem(Integer id, Integer idRemetente, Integer idEvento, String conteudo, LocalDate dataEnvio, LocalDate dataEdicao) {
         this.id = id;
         this.idRemetente = idRemetente;      
         this.idEvento = idEvento;  
         this.conteudo = conteudo;
-        this.dataEnvio = dataEnvio;
+        this.data = dataEnvio;
         this.dataEdicao = dataEdicao;
     }
 
@@ -47,14 +41,6 @@ public class Mensagem {
         this.id = id;
     }
 
-    // public Usuario getRemetente() {
-    //     return remetente;
-    // }
-
-    // public void setRemetente(Usuario remetente) {
-    //     this.remetente = remetente;
-    // }
-
     public Integer getIdRemetente() {
         return idRemetente;
     }
@@ -62,14 +48,6 @@ public class Mensagem {
     public void setIdRemetente(Integer idRemetente) {
         this.idRemetente = idRemetente;
     }
-
-    // public Evento getEvento() {
-    //     return evento;
-    // }
-
-    // public void setEvento(Evento evento) {
-    //     this.evento = evento;
-    // }
 
     public Integer getIdEvento() {
         return idEvento;
@@ -88,12 +66,12 @@ public class Mensagem {
         this.conteudo = conteudo;
     }
 
-    public LocalDate getDataEnvio() {
-        return dataEnvio;
+    public LocalDate getData() {
+        return data;
     }
 
-    public void setDataEnvio(LocalDate dataEnvio) {
-        this.dataEnvio = dataEnvio;
+    public void setData(LocalDate dataEnvio) {
+        this.data = dataEnvio;
     }
 
     public LocalDate getDataEdicao() {
