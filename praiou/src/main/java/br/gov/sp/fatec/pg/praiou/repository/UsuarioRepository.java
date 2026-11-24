@@ -146,7 +146,6 @@ public class UsuarioRepository {
                 resultado = token.equals(tokenBanco);
             }
         } catch(SQLException e) {
-            e.printStackTrace();
             System.out.println("Erro ao buscar o token: " + e.getMessage());
         }
 
@@ -219,7 +218,7 @@ public class UsuarioRepository {
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()) {
                 // Verifica se o código foi encontrado
-		if(rs.getString("cd_recuperacao") != null) {
+		        if(rs.getString("cd_recuperacao") != null) {
                     // Agora é verificado se o código ainda é valido
 
                     LocalDateTime timestampBanco = LocalDateTime.parse(rs.getString("dt_criacao_codigo_recuperacao"), formatador);

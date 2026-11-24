@@ -14,14 +14,13 @@ import br.gov.sp.fatec.pg.praiou.model.Amizade;
 public class AmizadeRepository {
 
     public static void solicitarAmizade(int idSolicitante, int idRecebedor) throws Exception {
-        String sql = "INSERT INTO amizade (id_usuario, id_usuario_recebedor_amizade, dt_amizade, ic_status_pendente_aceito) VALUES (?, ?, ?, 'PENDENTE');";
+        String sql = "INSERT INTO amizade (id_usuario, id_usuario_recebedor_amizade, ic_status_pendente_aceito) VALUES (?, ?, 'PENDENTE');";
 
         try (Connection conexao = MySQLConnection.conectar(); 
              PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             
             pstmt.setInt(1, idSolicitante);
             pstmt.setInt(2, idRecebedor);
-            pstmt.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
           
             pstmt.executeUpdate();
             System.out.println("Solicitação de amizade enviada com sucesso!");

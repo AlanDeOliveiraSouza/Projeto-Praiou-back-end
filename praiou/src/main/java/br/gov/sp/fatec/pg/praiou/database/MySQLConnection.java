@@ -21,7 +21,7 @@ public class MySQLConnection {
             Connection c = DriverManager.getConnection(URL, "root", null); 
             Statement stmt = c.createStatement();
 
-            stmt.execute("DROP DATABASE " + DBNAME);
+            //stmt.execute("DROP DATABASE " + DBNAME);
 
             stmt.execute(criarBanco);
             System.out.println("Banco de Dados '" + DBNAME + "' criado/verificado com sucesso!");
@@ -53,7 +53,7 @@ public class MySQLConnection {
             "cd_token VARCHAR(36), " +
             "cd_recuperacao CHAR(4), " +
             "dt_criacao_codigo_recuperacao TIMESTAMP, " +
-            "nm_nivel_habilidade VARCHAR(13) DEFAULT 'Iniciante'" +
+            "nm_nivel_habilidade ENUM('INICIANTE', 'INTERMEDIARIO', 'AVANCADO') DEFAULT 'INICIANTE'" +
         ");";
 
         // Script de criação da tabela CIDADE
@@ -62,6 +62,7 @@ public class MySQLConnection {
             "sg_cidade CHAR(3) PRIMARY KEY, " +
             "nm_cidade VARCHAR(50) NOT NULL, " +
             "sg_estado CHAR(2) NOT NULL" +
+            "im_cidade TEXT NOT NULL" +
         ");";
 
         // Script de criação da tabela PRAIA
@@ -70,6 +71,7 @@ public class MySQLConnection {
             "id_praia INTEGER AUTO_INCREMENT PRIMARY KEY, " +
             "sg_cidade CHAR(3) NOT NULL, " +
             "nm_praia VARCHAR(50) NOT NULL, " +
+            "im_praia TEXT NOT NULL" +
             "CONSTRAINT fk_praia_cidade FOREIGN KEY (sg_cidade) REFERENCES CIDADE(sg_cidade)" +
         ");";
 
@@ -87,7 +89,7 @@ public class MySQLConnection {
             "nm_endereco VARCHAR(255), " +
             "qt_limite_participantes INTEGER, " +
             "dt_publicacao_evento DATE DEFAULT NOW(), " +
-            "nm_nivel_habilidade VARCHAR(13) DEFAULT 'Nenhum', " +
+            "nm_nivel_habilidade ENUM('NENHUM', 'INICIANTE', 'INTERMEDIARIO', 'AVANCADO') DEFAULT 'NENHUM', " +
             "CONSTRAINT fk_evento_usuario FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario), " +
             "CONSTRAINT fk_evento_praia FOREIGN KEY (id_praia) REFERENCES PRAIA(id_praia)" +
         ");";
@@ -99,6 +101,7 @@ public class MySQLConnection {
             "id_usuario INTEGER NOT NULL, " +
             "id_usuario_recebedor_amizade INTEGER NOT NULL, " +
             "ic_status_pendente_aceito ENUM('PENDENTE','ACEITO') NOT NULL, " +
+            "dt_amizade DATE DEFAULT NOW(), " +
             "CONSTRAINT fk_amizade_solicitante FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario), " +
             "CONSTRAINT fk_amizade_amigo FOREIGN KEY (id_usuario_recebedor_amizade) REFERENCES USUARIO(id_usuario)" +
         ");";
@@ -161,44 +164,44 @@ public class MySQLConnection {
             "CONSTRAINT fk_avaliacao_postagem_2 FOREIGN KEY (id_postagem) REFERENCES POSTAGEM (id_postagem)" +
         ");";
 
-        // INSERÇÃO DE DADOS (na ordem das chaves estrangeiras)
+        // INSERÇÃO DE DADOS
 
         // Inserção de dados na tabela USUARIO
         String insercaoUsuario =
         "INSERT IGNORE INTO USUARIO (id_usuario, nm_usuario, nm_email_usuario, cd_senha, ds_bio, vl_pontuacao, dt_nascimento, cd_token) VALUES " +
-        "(1, 'Alan Souza', 'alandeoliveirasou@gmail.com', '$2a$10$4iQXP7MZ/83yxSBUKPELu.F6NL9W3MQ47oCx/2Ub9ZyFEAvbluFNW', 'Lorem ipsum dolor sit amet', 3, '2001-01-01', 'ffffffffffddddddddddfdgfhghjgfdsasrs'), " +
-        "(2, 'Emanuel de Brito', 'emanuelbrit16@gmail.com', '$2a$10$d20jGP4jqqb1a.3uTvODROGqMfWumXSDJkGHYj68tWSN2QX5hOABy', 'Lorem ipsum dolor sit amet', 6, '2001-01-01', 'ffffffffffddddddddddfdgfhghjgfdsasrs'), " +
-        "(3, 'Cauê Simões', 'cauemayo@gmail.com', '$2a$10$KB4LsbJ6HOBR.dAWW4VM5O/L38r6S4qtzIQMIAJCxNpngJBHYCbbC', 'Lorem ipsum dolor sit amet', 4, '2001-01-01', 'ffffffffffddddddddddfdgfhghjgfdsasrs'), " +
-        "(4, 'Fellipe Cerqueira', 'fefebairos@gmail.com', '$2a$10$DUs0UX5Kp5wGQOmwYtHI7.6YBkXlnp.vRElyN/kHnDM8hRxuTaNqK', 'Lorem ipsum dolor sit amet', 5, '2001-01-01', 'ffffffffffddddddddddfdgfhghjgfdsasrs'), " +
-        "(5, 'Mariana Costa', 'marianacosta.praiou@gmail.com', '$2a$10$4iQXP7MZ/83yxSBUKPELu.F6NL9W3MQ47oCx/2Ub9ZyFEAvbluFNW', 'Amante de vôlei de praia e corrida matinal', 7, '1999-08-14', 'aaaabbbbccccddddeeeeffffgggghhhhiiii');";
+        "(1, 'Alan Souza', 'alandeoliveirasou@gmail.com', '$2a$10$4iQXP7MZ/83yxSBUKPELu.F6NL9W3MQ47oCx/2Ub9ZyFEAvbluFNW', 'Lorem ipsum dolor sit amet', 3, '2001-01-01', NULL), " +
+        "(2, 'Emanuel de Brito', 'emanuelbrit16@gmail.com', '$2a$10$d20jGP4jqqb1a.3uTvODROGqMfWumXSDJkGHYj68tWSN2QX5hOABy', 'Lorem ipsum dolor sit amet', 6, '2001-01-01', NULL), " +
+        "(3, 'Kaique Melo', 'kaiquemelo@gmail.com', '$2a$10$KB4LsbJ6HOBR.dAWW4VM5O/L38r6S4qtzIQMIAJCxNpngJBHYCbbC', 'Lorem ipsum dolor sit amet', 4, '2001-01-01', NULL), " +
+        "(4, 'Fellipe Cerqueira', 'fefebairos@gmail.com', '$2a$10$DUs0UX5Kp5wGQOmwYtHI7.6YBkXlnp.vRElyN/kHnDM8hRxuTaNqK', 'Lorem ipsum dolor sit amet', 5, '2001-01-01', NULL), " +
+        "(5, 'Mariana Costa', 'marianacosta@gmail.com', '$2a$10$4iQXP7MZ/83yxSBUKPELu.F6NL9W3MQ47oCx/2Ub9ZyFEAvbluFNW', 'Amante de vôlei de praia e corrida matinal', 7, '1999-08-14', 'NULL);";
         // Todas as senhas são '123456'
 
         // Inserção de dados na tabela CIDADE
         String insercaoCidade =
-        "INSERT IGNORE INTO CIDADE (sg_cidade, nm_cidade, sg_estado) VALUES " +
-        "('PRG', 'Praia Grande', 'SP'), " +
-        "('SAN', 'Santos', 'SP'), " +
-        "('SVI', 'São Vicente', 'SP'), " +
-        "('GUA', 'Guarujá', 'SP'), " +
-        "('ITA', 'Itanhaém', 'SP');";
+        "INSERT IGNORE INTO CIDADE (sg_cidade, nm_cidade, sg_estado, im_cidade) VALUES " +
+        "('PRG', 'Praia Grande', 'SP', '/praiou-midias/cidades/sp_praia_grande.png'), " +
+        "('SAN', 'Santos', 'SP', '/praiou-midias/cidades/sp_santos.png'), " +
+        "('SVI', 'São Vicente', 'SP', '/praiou-midias/cidades/sp_sao_vicente.png'), " +
+        "('GUA', 'Guarujá', 'SP', '/praiou-midias/cidades/sp_guaruja.png'), " +
+        "('ITA', 'Itanhaém', 'SP', '/praiou-midias/cidades/sp_itanhaem.png');";
 
         // Inserção de dados na tabela PRAIA
         String insercaoPraia =
-        "INSERT IGNORE INTO PRAIA (id_praia, sg_cidade, nm_praia) VALUES " +
-        "(1, 'PRG', 'Praia do Boqueirão'), " +
-        "(2, 'PRG', 'Praia da Guilhermina'), " +
-        "(3, 'SAN', 'Praia do Gonzaga'), " +
-        "(4, 'SVI', 'Praia do Gonzaguinha'), " +
-        "(5, 'GUA', 'Praia das Astúrias');";
+        "INSERT IGNORE INTO PRAIA (id_praia, sg_cidade, nm_praia, im_praia) VALUES " +
+        "(1, 'PRG', 'Praia do Boqueirão', '/praiou-midias/praias/prg_boqueirao.png'), " +
+        "(2, 'PRG', 'Praia da Guilhermina', '/praiou-midias/praias/prg_guilhermina.png'), " +
+        "(3, 'SAN', 'Praia do Gonzaga', '/praiou-midias/praias/san_gonzaga.png'), " +
+        "(4, 'SVI', 'Praia do Gonzaguinha', '/praiou-midias/praias/svi_gonzaguinha.png'), " +
+        "(5, 'ITA', 'Praia do Suarão', '/praiou-midias/praias/ita_suarao.png');";
 
         // Inserção de dados na tabela EVENTO
         String insercaoEvento =
-        "INSERT IGNORE INTO EVENTO (id_evento, id_usuario, nm_evento, ds_evento, dt_evento, hr_evento, nm_tipo_evento, id_praia, nm_endereco, qt_limite_participantes) VALUES " +
-        "(1, 2, 'Futebol na praia', 'Venham e se divirtam conosco!', '2026-06-24', '15:30:00', 'FUTEBOL', 1, 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 10), " +
-        "(2, 4, 'Futebol com novos colegas', 'Vamos aproveitar o fim de tarde', '2026-06-21', '16:00:00', 'FUTEBOL', 2, 'Av Pres. Castelo Branco, 2762, Guilhermina - Praia Grande', 10), " +
-        "(3, 3, 'Corrida na praia', 'Venha participar de uma corrida nas praias de Praia Grande conosco!', '2026-06-28', '12:00:00', 'CORRIDA', 1, 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6), " +
-        "(4, 2, 'Correndo por aí', 'Venham e se divirtam conosco!', '2026-06-20', '09:00:00', 'CORRIDA', 3, 'Av. Presidente Wilson, 120, Gonzaga - Santos', 4), " +
-        "(5, 1, 'Volei na praia com amigos do Praiou', 'Venham e se divirtam conosco!', '2026-06-17', '15:00:00', 'VOLEI', 1, 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6);";
+        "INSERT IGNORE INTO EVENTO (id_evento, id_usuario, nm_evento, ds_evento, dt_evento, hr_evento, nm_tipo_evento, id_praia, nm_endereco, qt_limite_participantes, nm_nivel_habilidade) VALUES " +
+        "(1, 2, 'Futebol na praia', 'Venham e se divirtam conosco!', '2026-06-24', '15:30:00', 'FUTEBOL', 1, 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 10, 'NENHUM'), " +
+        "(2, 4, 'Futebol com novos colegas', 'Vamos aproveitar o fim de tarde', '2026-06-21', '16:00:00', 'FUTEBOL', 2, 'Av Pres. Castelo Branco, 2762, Guilhermina - Praia Grande', 10, 'NENHUM'), " +
+        "(3, 3, 'Corrida na praia', 'Venha participar de uma corrida nas praias de Praia Grande conosco!', '2026-06-28', '12:00:00', 'CORRIDA', 1, 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6, 'NENHUM'), " +
+        "(4, 2, 'Correndo por aí', 'Venham e se divirtam conosco!', '2026-06-20', '09:00:00', 'CORRIDA', 3, 'Av. Presidente Wilson, 120, Gonzaga - Santos', 4, 'NENHUM'), " +
+        "(5, 1, 'Volei na praia com amigos do Praiou', 'Venham e se divirtam conosco!', '2026-06-17', '15:00:00', 'VOLEI', 1, 'Av Pres. Castelo Branco, 1490, Boqueirão - Praia Grande', 6, 'NENHUM');";
 
         // Inserção de dados na tabela AMIZADE
         String insercaoAmizade =
@@ -255,7 +258,7 @@ public class MySQLConnection {
         "(5, 4, 0);";
 
         try (Connection conexao = conectar(); Statement stmt = conexao.createStatement();) {
-            // 1. Criação das tabelas (pais antes das filhas)
+            // Criação das tabelas 
             stmt.execute(tabelaUsuario);
             stmt.execute(tabelaCidade);
             stmt.execute(tabelaPraia);
@@ -268,7 +271,7 @@ public class MySQLConnection {
             stmt.execute(tabelaAvaliacaoPostagem);
             System.out.println("Tabelas criadas/verificadas com sucesso!");
 
-            // 2. Inserção dos dados (tabelas referenciadas antes das dependentes)
+            // Inserção dos dados
             stmt.execute(insercaoUsuario);
             stmt.execute(insercaoCidade);
             stmt.execute(insercaoPraia);
@@ -289,7 +292,7 @@ public class MySQLConnection {
     public static Connection conectar() throws Exception {
         // Inicia conexão ao banco de dados
 
-        //                              local, usuario, senha
+        //                                       local, usuario, senha
         return DriverManager.getConnection(URL + DBNAME, "root", null);
     }
 }
