@@ -37,7 +37,7 @@ public class Main {
         EmailService emailService = new EmailService();
 
         // Chama o diretório de armazenameno de fotos
-        String diretorioFotos = System.getProperty("user.dir") + "-upload-fotos";
+        String diretorioFotos = System.getProperty("user.dir") + "-midias";
 
         // Garante que a pasta exista
         File pasta = new File(diretorioFotos);
@@ -62,7 +62,7 @@ public class Main {
             ctx.json(Map.of("message","Praiou em execução!"));
         });
 
-        // ---ENDPOINTS DE AUTENTICAÇÃO ---
+        // --- ENDPOINTS DE AUTENTICAÇÃO ---
 
         // Endpoint para verificar presenca do token no armazenamento local
         app.get("/token", ctx -> {
@@ -199,6 +199,7 @@ public class Main {
         
 
         // --- ENDPOINTS DOS EVENTOS ---
+
         // Endpoint para listar todos os eventos
         app.get("/api/eventos", ctx -> {
             // Busca todos os eventos no banco de dados
@@ -327,7 +328,8 @@ public class Main {
         });
 
 
-        // --- ENDPOINTS DE POSTAGENS
+        // --- ENDPOINTS DE POSTAGENS ---
+
         // Endpoint que busca todas as postagens
         app.get("api/posts", ctx -> {
             try{
@@ -341,6 +343,7 @@ public class Main {
 
 
         // --- ENDPOINTS DAS MENSAGENS ---
+
         // Endpoint para busca de todas as mensagens de um evento
         app.get("/api/eventos/{id}/msgs", ctx ->{
             try{
@@ -408,7 +411,8 @@ public class Main {
             }
         });
 
-		//ENDPOINTS DE AMIZADE 
+	// --- ENDPOINTS DE AMIZADE ---
+
         // Endpoint para enviar uma solicitação de amizade
         // POST /api/amizades/solicitar?idRecebedor=2
         app.post("/api/amizades/solicitar", ctx -> {
@@ -498,7 +502,8 @@ public class Main {
 
 
 
-        // --- ENDPOINTS PERFIL
+        // --- ENDPOINTS PERFIL ---
+
         // Endpoint que retorna os dados do perfil do usuário
         app.get("api/perfil", ctx -> {
             String token = ctx.header("Authorization");
@@ -558,7 +563,8 @@ public class Main {
             }
         });
 
-        // --- ENDPOINT RANKING
+        // --- ENDPOINT RANKING ---
+
         // Endpoint para buscar Ranking
         app.get("api/ranking", ctx -> {
             try {
@@ -570,9 +576,9 @@ public class Main {
             }
         });
 
-		//ENDPOINTS DE AVALIAÇÃO
+	// --- ENDPOINTS DE AVALIAÇÃO ---
+
         // Endpoint para registrar uma nova avaliação (Like/Dislike)
-        // POST /api/avaliar
         app.post("/api/avaliar", ctx -> {
             try {
                 String token = ctx.header("Authorization");
@@ -602,7 +608,6 @@ public class Main {
         });
 
         // Endpoint para buscar todas as avaliações que o usuário logado recebeu
-        // GET /api/avaliacoes/recebidas
         app.get("/api/avaliacoes/recebidas", ctx -> {
             try {
                 String token = ctx.header("Authorization");
