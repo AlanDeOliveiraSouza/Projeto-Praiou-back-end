@@ -1,8 +1,9 @@
+package br.gov.sp.fatec.pg.praiou.model;
+
 public class Praia {
     private Integer id;
     private String nome;
     private String siglaCidade;
-    private Cidade cidade;
 
     public Praia() {
     }
@@ -37,11 +38,4 @@ public class Praia {
         this.siglaCidade = siglaCidade;
     }
 
-    public Cidade getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(Cidade cidade) {
-        this.cidade = cidade;
-    }
 }

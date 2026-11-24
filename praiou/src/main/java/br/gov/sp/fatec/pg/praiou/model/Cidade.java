@@ -1,11 +1,9 @@
-import java.util.ArrayList;
-import java.util.List;
+package br.gov.sp.fatec.pg.praiou.model;
 
 public class Cidade {
     private String sigla;
     private String nome;
     private String siglaEstado;
-    private List<Praia> praias = new ArrayList<>();
 
     public Cidade() {
     }
@@ -40,11 +38,4 @@ public class Cidade {
         this.siglaEstado = siglaEstado;
     }
 
-    public List<Praia> getPraias() {
-        return praias;
-    }
-
-    public void setPraias(List<Praia> praias) {
-        this.praias = praias;
-    }
 }
